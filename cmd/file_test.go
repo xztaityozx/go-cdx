@@ -117,4 +117,21 @@ func TestAllFile(t *testing.T) {
 		}
 
 	})
+
+	t.Run("006_AppendRecord", func(t *testing.T) {
+		os.MkdirAll(workdir, 0777)
+		ioutil.WriteFile(config.BookMarkFile, []byte("[]"), 0644)
+
+		AppendRecord("/path/to", config.BookMarkFile)
+
+		expect := `[{"Number":1,"Path":"/path/to"}]`
+		actual, _ := ioutil.ReadFile(config.BookMarkFile)
+
+		if expect != string(actual) {
+			t.Fatal(string(actual), "is not", expect)
+		}
+
+		os.Remove(config.BookMarkFile)
+
+	})
 }

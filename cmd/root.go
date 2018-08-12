@@ -48,7 +48,7 @@ var rootCmd = &cobra.Command{
 		} else {
 			p, _ := os.Getwd()
 			if len(args) != 0 {
-				p = args[0]
+				p, _ = homedir.Expand(args[0])
 			}
 
 			if com, err := getCdCommand(p, os.Stderr, os.Stdin); err != nil {

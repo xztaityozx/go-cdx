@@ -97,3 +97,20 @@ func getCdCommandWithFinder() (string, error) {
 	}
 	return "", errors.New("")
 }
+
+func AppendRecord(p string, target string) {
+	res := *getRecordsFromFile(target)
+	n := len(res) + 1
+	res = append(res, Record{
+		Number: n,
+		Path:   p,
+	})
+
+	b, err := json.Marshal(res)
+	if err != nil {
+		Fatal(err)
+	}
+	if err := ioutil.WriteFile(target, b, 0644); err != nil {
+		Fatal(err)
+	}
+}
