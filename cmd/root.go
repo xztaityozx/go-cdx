@@ -44,8 +44,6 @@ var rootCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		if useBookmark {
 
-		} else if useGhq {
-
 		} else if useHistory {
 
 		} else {
@@ -96,8 +94,6 @@ func init() {
 	rootCmd.Flags().BoolVarP(&useHistory, "history", "h", false, "ブックマークからcdxします")
 	//bookmark
 	rootCmd.Flags().BoolVarP(&useBookmark, "bookmark", "b", false, "ブックマークからcdxします")
-	//ghq
-	rootCmd.Flags().BoolVarP(&useGhq, "ghq", "g", false, "ghq listからcdxします")
 	//make
 	rootCmd.Flags().Bool("make", false, "ディレクトリが無い場合、作ってから移動します")
 	viper.BindPFlag("make", rootCmd.Flags().Lookup("make"))
@@ -107,7 +103,7 @@ func init() {
 }
 
 // flags
-var useHistory, useBookmark, useGhq bool
+var useHistory, useBookmark bool
 
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
