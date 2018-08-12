@@ -5,12 +5,30 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"os"
-	"os/exec"
-	"strings"
+	"path/filepath"
 	"testing"
 )
 
 func TestAllFile(t *testing.T) {
+	workdir := filepath.Join(os.Getenv("HOME"), "WorkSpace", "CDX")
+	config = Config{
+		BookMarkFile: filepath.Join(workdir, "bookmark.json"),
+		HistoryFile:  filepath.Join(workdir, "history.json"),
+		FuzzyFinder: FuzzyFinder{
+			CommandPath: "/usr/bin/head",
+			Options:     "-n1",
+		},
+		CustomSource: []CustomSource{
+			CustomSource{
+				Command: "/custom/command",
+				Name:    "custom",
+			},
+		},
+		Command:  "echo",
+		Make:     false,
+		NoOutput: false,
+		UseSSH:   false,
+	}
 	rcd := []Record{
 		Record{
 			Number: 1,
@@ -58,16 +76,45 @@ func TestAllFile(t *testing.T) {
 		}
 	})
 
-	t.Run("003_getRecordsFromCommand", func(t *testing.T) {
-		command := "/bin/ls / -1"
-		out, _ := exec.Command("bash", "-c", command).Output()
+	t.Run("003_getCdCommandWithFinderFromCommand", func(t *testing.T) {
+		actual := getCdCommandWithFinderFromCommand("echo ABC")
+		expect := constructCdCommand("ABC")
 
-		actuals := getRecordsFromCommand(command)
-
-		for i, v := range strings.Split(string(out), "\n") {
-			if !(*actuals)[i].Compare(Record{Number: i, Path: v}) {
-				t.Fatal("Unexpected result getRecordsFromCommand")
-			}
+		if expect != actual {
+			t.Fatal(actual, "is not", expect)
 		}
+	})
+
+	t.Run("004_getCdCommandWithFinderFromFile", func(t *testing.T) {
+		b, _ := json.Marshal(rcd)
+		tmp, _ := ioutil.TempFile("", "test004_FromFile")
+		defer os.Remove(tmp.Name())
+		tmp.Close()
+
+		ioutil.WriteFile(tmp.Name(), b, 0644)
+
+		expect := constructCdCommand(rcd[0].Path)
+		actual := getCdCommandWithFinderFromFile(tmp.Name())
+
+		if expect != actual {
+			t.Fatal(actual, "is not", expect)
+		}
+
+	})
+
+	t.Run("005_getCustomSource", func(t *testing.T) {
+		expect := config.CustomSource[0].Command
+		actual, err := getCustomSorce(config.CustomSource[0].Name)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if expect != actual {
+			t.Fatal(actual, "is not", expect)
+		}
+
+		if _, err := getCustomSorce("ABC"); err == nil {
+			t.Fatal("Unexpected result getCustomSorce")
+		}
+
 	})
 }

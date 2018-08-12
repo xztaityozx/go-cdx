@@ -42,10 +42,9 @@ var rootCmd = &cobra.Command{
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	Run: func(cmd *cobra.Command, args []string) {
-		if useBookmark {
 
-		} else if useHistory {
-
+		if fuz, err := getCdCommandWithFinder(); err == nil {
+			fmt.Println(fuz)
 		} else {
 			p, _ := os.Getwd()
 			if len(args) != 0 {
@@ -100,10 +99,13 @@ func init() {
 	//no-output
 	rootCmd.Flags().Bool("no-output", false, "Stdoutに何も出力しません")
 	viper.BindPFlag("NoOutput", rootCmd.Flags().Lookup("no-output"))
+	//custom
+	rootCmd.Flags().StringVarP(&customSource, "custom", "c", "", "コマンドの出力からcdxします")
 }
 
 // flags
 var useHistory, useBookmark bool
+var customSource string
 
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
@@ -134,4 +136,5 @@ func initConfig() {
 	if err := viper.Unmarshal(&config); err != nil {
 		log.Fatal(err)
 	}
+
 }

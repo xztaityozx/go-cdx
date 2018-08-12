@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strings"
 )
 
 func getCdCommand(p string, stderr io.Writer, stdin io.Reader) (string, error) {
@@ -42,5 +43,5 @@ func constructCdCommand(p string) string {
 		base = fmt.Sprintf("%s > /dev/null", base)
 	}
 
-	return base
+	return strings.Trim(base, "\n")
 }

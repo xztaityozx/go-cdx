@@ -18,12 +18,11 @@ type Config struct {
 
 type FuzzyFinder struct {
 	CommandPath string
-	Option      string
+	Options     []string
 }
 
 type CustomSource struct {
 	Name    string
-	Path    string
 	Command string
 }
 
@@ -39,4 +38,14 @@ func (rcd Record) ToString() string {
 
 func (s Record) Compare(t Record) bool {
 	return s.Number == t.Number && s.Path == t.Path
+}
+
+func (ff FuzzyFinder) GetCommand() []string {
+	var rt []string = []string{
+		ff.CommandPath,
+	}
+
+	rt = append(rt, ff.Options...)
+
+	return rt
 }

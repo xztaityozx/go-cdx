@@ -3,9 +3,12 @@ package cmd
 import (
 	"bufio"
 	"encoding/json"
+	"errors"
+	"fmt"
 	"io/ioutil"
-	"os/exec"
 	"strings"
+
+	"github.com/mattn/go-pipeline"
 )
 
 func writeInputFile(stream *[]Record) string {
@@ -42,21 +45,55 @@ func getRecordsFromFile(f string) *[]Record {
 	return &res
 }
 
-func getRecordsFromCommand(command string) *[]Record {
-	out, err := exec.Command("bash", "-c", command).Output()
+func getCdCommandWithFinderFromFile(p string) string {
+	in := writeInputFile(getRecordsFromFile(p))
+	b, err := pipeline.Output(
+		[]string{"cat", in},
+		config.FuzzyFinder.GetCommand(),
+		[]string{"awk", "{print $NF}"},
+	)
 	if err != nil {
 		Fatal(err)
 	}
 
-	var rt []Record
+	return constructCdCommand(string(b))
+}
 
-	for i, v := range strings.Split(string(out), "\n") {
-		rt = append(rt, Record{
-			Number: i,
-			Path:   v,
-		})
+func getCdCommandWithFinderFromCommand(command string) string {
+	b, err := pipeline.Output(
+		[]string{"bash", "-c", command},
+		config.FuzzyFinder.GetCommand(),
+		[]string{"awk", "{print $NF}"},
+	)
+
+	if err != nil {
+		Fatal(err)
 	}
 
-	return &rt
+	return constructCdCommand(string(b))
+}
 
+func getCustomSorce(name string) (string, error) {
+	for _, v := range config.CustomSource {
+		if v.Name == name {
+			return v.Command, nil
+		}
+	}
+	return "", errors.New(fmt.Sprint(name, "could not found in custom sorce"))
+}
+
+func getCdCommandWithFinder() (string, error) {
+
+	if useBookmark {
+		return getCdCommandWithFinderFromFile(config.BookMarkFile), nil
+	} else if useHistory {
+		return getCdCommandWithFinderFromFile(config.HistoryFile), nil
+	} else if len(customSource) != 0 {
+		name, err := getCustomSorce(customSource)
+		if err != nil {
+			return "", err
+		}
+		return getCdCommandWithFinderFromCommand(name), nil
+	}
+	return "", errors.New("")
 }
