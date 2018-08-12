@@ -22,7 +22,9 @@ package cmd
 
 import (
 	"fmt"
+	"log"
 	"os"
+	"path/filepath"
 
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
@@ -34,13 +36,8 @@ var cfgFile string
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "go-cdx",
-	Short: "A brief description of your application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "",
+	Long:  ``,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	//	Run: func(cmd *cobra.Command, args []string) { },
@@ -61,11 +58,13 @@ func init() {
 	// Here you will define your flags and configuration settings.
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.go-cdx.yaml)")
+	home, err := homedir.Dir()
+	if err != nil {
+		log.Fatal(err)
+	}
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "",
+		fmt.Sprint("config file default :", filepath.Join(home, ".config", "cdx", ".go-cdx.json")))
 
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -82,7 +81,7 @@ func initConfig() {
 		}
 
 		// Search config in home directory with name ".go-cdx" (without extension).
-		viper.AddConfigPath(home)
+		viper.AddConfigPath(filepath.Join(home, ".config", "go-cdx"))
 		viper.SetConfigName(".go-cdx")
 	}
 
