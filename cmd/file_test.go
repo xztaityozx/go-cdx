@@ -16,7 +16,7 @@ func TestAllFile(t *testing.T) {
 		HistoryFile:  filepath.Join(workdir, "history.json"),
 		FuzzyFinder: FuzzyFinder{
 			CommandPath: "/usr/bin/head",
-			Options:     "-n1",
+			Options:     []string{"-n1"},
 		},
 		CustomSource: []CustomSource{
 			CustomSource{
