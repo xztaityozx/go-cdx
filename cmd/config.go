@@ -8,7 +8,7 @@ type Config struct {
 	UseSSH       bool
 	Make         bool
 	CustomFile   []CustomFile
-	FuzzyFider   FuzzyFinder
+	FuzzyFinder  FuzzyFinder
 }
 
 type FuzzyFinder struct {
@@ -20,4 +20,9 @@ type CustomFile struct {
 	Name   string
 	Path   string
 	Format string
+}
+
+type Record struct {
+	Number int
+	Path   string
 }

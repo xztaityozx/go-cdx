@@ -32,6 +32,7 @@ import (
 )
 
 var cfgFile string
+var config Config
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -40,7 +41,9 @@ var rootCmd = &cobra.Command{
 	Long:  ``,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
-	//	Run: func(cmd *cobra.Command, args []string) { },
+	Run: func(cmd *cobra.Command, args []string) {
+
+	},
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -64,8 +67,16 @@ func init() {
 	}
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "",
 		fmt.Sprint("config file default :", filepath.Join(home, ".config", "cdx", ".go-cdx.json")))
-
+	// history
+	rootCmd.PersistentFlags().BoolVarP(&useHistory, "history", "h", false, "ヒストリーからcdxします")
+	// bookmark
+	rootCmd.PersistentFlags().BoolVarP(&useBookmark, "bookmark", "b", false, "ブックマークからcdxします")
+	// ghq
+	rootCmd.PersistentFlags().BoolVarP(&useGhq, "ghq", "g", false, "ghq listからcdxします")
 }
+
+// flags
+var useHistory, useBookmark, useGhq bool
 
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
@@ -88,7 +99,12 @@ func initConfig() {
 	viper.AutomaticEnv() // read in environment variables that match
 
 	// If a config file is found, read it in.
-	if err := viper.ReadInConfig(); err == nil {
-		fmt.Println("Using config file:", viper.ConfigFileUsed())
+	if err := viper.ReadInConfig(); err != nil {
+		//fmt.Println("Using config file:", viper.ConfigFileUsed())
+		log.Fatal(err)
+	}
+
+	if err := viper.Unmarshal(&config); err != nil {
+		log.Fatal(err)
 	}
 }
