@@ -8,7 +8,7 @@ import (
 	"os"
 )
 
-func cd(p string, stderr io.Writer, stdin io.Reader) (string, error) {
+func getCdCommand(p string, stderr io.Writer, stdin io.Reader) (string, error) {
 	if _, err := os.Stat(p); err != nil {
 		if config.Make {
 			in := bufio.NewScanner(stdin)

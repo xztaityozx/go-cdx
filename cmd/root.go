@@ -42,7 +42,24 @@ var rootCmd = &cobra.Command{
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	Run: func(cmd *cobra.Command, args []string) {
+		if useBookmark {
 
+		} else if useGhq {
+
+		} else if useHistory {
+
+		} else {
+			p, _ := os.Getwd()
+			if len(args) != 0 {
+				p = args[0]
+			}
+
+			if com, err := getCdCommand(p, os.Stderr, os.Stdin); err != nil {
+				Fatal(err)
+			} else {
+				fmt.Println(com)
+			}
+		}
 	},
 }
 
@@ -65,14 +82,28 @@ func init() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "",
 		fmt.Sprint("config file default :", filepath.Join(home, ".config", "cdx", ".go-cdx.json")))
-	// history
-	rootCmd.PersistentFlags().BoolVarP(&useHistory, "history", "h", false, "ヒストリーからcdxします")
-	// bookmark
-	rootCmd.PersistentFlags().BoolVarP(&useBookmark, "bookmark", "b", false, "ブックマークからcdxします")
-	// ghq
-	rootCmd.PersistentFlags().BoolVarP(&useGhq, "ghq", "g", false, "ghq listからcdxします")
+	rootCmd.Flags().Bool("help", false, "help")
+
+	rootCmd.SetHelpFunc(func(cmd *cobra.Command, args []string) {
+		cmd.Usage()
+		os.Exit(1)
+	})
+
+	//history
+	rootCmd.Flags().BoolVarP(&useHistory, "history", "h", false, "ブックマークからcdxします")
+	//bookmark
+	rootCmd.Flags().BoolVarP(&useBookmark, "bookmark", "b", false, "ブックマークからcdxします")
+	//ghq
+	rootCmd.Flags().BoolVarP(&useGhq, "ghq", "g", false, "ghq listからcdxします")
+	//make
+	rootCmd.Flags().Bool("make", false, "ディレクトリが無い場合、作ってから移動します")
+	viper.BindPFlag("make", rootCmd.Flags().Lookup("make"))
+	//no-output
+	rootCmd.Flags().Bool("no-output", false, "Stdoutに何も出力しません")
+	viper.BindPFlag("NoOutput", rootCmd.Flags().Lookup("no-output"))
 }
 
 // flags

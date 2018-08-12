@@ -45,7 +45,7 @@ func TestAllCd(t *testing.T) {
 	t.Run("002_cd", func(t *testing.T) {
 		stdin := bytes.NewBufferString("y")
 		stderr := new(bytes.Buffer)
-		actual, err := cd(workdir, stderr, stdin)
+		actual, err := getCdCommand(workdir, stderr, stdin)
 
 		if err != nil {
 			t.Fatal(err)
@@ -65,7 +65,7 @@ func TestAllCd(t *testing.T) {
 
 		p := filepath.Join(workdir, "TEST_MAKE1")
 
-		_, err := cd(p, stderr, stdin)
+		_, err := getCdCommand(p, stderr, stdin)
 
 		if err == nil {
 			t.Fatal("Unexpected Success")
@@ -85,7 +85,7 @@ func TestAllCd(t *testing.T) {
 
 		p := filepath.Join(workdir, "TEST_MAKE1")
 
-		actual, err := cd(p, stderr, stdin)
+		actual, err := getCdCommand(p, stderr, stdin)
 
 		if err != nil {
 			t.Fatal(err)

@@ -7,7 +7,7 @@ type Config struct {
 	NoOutput     bool
 	UseSSH       bool
 	Make         bool
-	CustomFile   []CustomFile
+	CustomSource []CustomSource
 	FuzzyFinder  FuzzyFinder
 }
 
@@ -16,10 +16,11 @@ type FuzzyFinder struct {
 	Option      string
 }
 
-type CustomFile struct {
-	Name   string
-	Path   string
-	Format string
+type CustomSource struct {
+	Name    string
+	Path    string
+	Command string
+	Format  string
 }
 
 type Record struct {
