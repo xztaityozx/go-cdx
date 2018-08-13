@@ -22,7 +22,11 @@ type Version struct {
 }
 
 func (v Version) ToString() string {
-	return fmt.Sprintf("cdx version %d.%d.%d %s (%s)\n\nAuthor: xztaityozx\nRepository: https://github.com/xztaityozx/go-cdx\n\nLicense: MIT", v.Major, v.Minor, v.Build, v.Status, v.Date)
+	return fmt.Sprintf(`cdx version %d.%d.%d %s (%s)
+	
+Author:     xztaityozx
+Repository: https://github.com/xztaityozx/go-cdx
+License:    MIT`, v.Major, v.Minor, v.Build, v.Status, v.Date)
 }
 
 func PrintVersion() {
