@@ -42,16 +42,19 @@ var rootCmd = &cobra.Command{
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	Run: func(cmd *cobra.Command, args []string) {
-		if useBookmark {
 
-		} else if useGhq {
-
-		} else if useHistory {
-
+		if fuz, err := getCdCommandWithFinder(); err == nil {
+			fmt.Println(fuz)
 		} else {
 			p, _ := os.Getwd()
 			if len(args) != 0 {
-				p = args[0]
+				p, _ = homedir.Expand(args[0])
+			}
+
+			// Bookmarkして終了
+			if addBookmark {
+				AppendRecord(p, config.BookMarkFile)
+				os.Exit(0)
 			}
 
 			if com, err := getCdCommand(p, os.Stderr, os.Stdin); err != nil {
@@ -96,18 +99,21 @@ func init() {
 	rootCmd.Flags().BoolVarP(&useHistory, "history", "h", false, "ブックマークからcdxします")
 	//bookmark
 	rootCmd.Flags().BoolVarP(&useBookmark, "bookmark", "b", false, "ブックマークからcdxします")
-	//ghq
-	rootCmd.Flags().BoolVarP(&useGhq, "ghq", "g", false, "ghq listからcdxします")
 	//make
 	rootCmd.Flags().Bool("make", false, "ディレクトリが無い場合、作ってから移動します")
 	viper.BindPFlag("make", rootCmd.Flags().Lookup("make"))
 	//no-output
 	rootCmd.Flags().Bool("no-output", false, "Stdoutに何も出力しません")
 	viper.BindPFlag("NoOutput", rootCmd.Flags().Lookup("no-output"))
+	//custom
+	rootCmd.Flags().StringVarP(&customSource, "custom", "c", "", "コマンドの出力からcdxします")
+	//add bookmark
+	rootCmd.Flags().BoolVar(&addBookmark, "add", false, "カレントディレクトリをBookmarkします")
 }
 
 // flags
-var useHistory, useBookmark, useGhq bool
+var useHistory, useBookmark, addBookmark bool
+var customSource string
 
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
@@ -138,4 +144,5 @@ func initConfig() {
 	if err := viper.Unmarshal(&config); err != nil {
 		log.Fatal(err)
 	}
+
 }
