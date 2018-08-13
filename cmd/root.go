@@ -43,6 +43,11 @@ var rootCmd = &cobra.Command{
 	// has an action associated with it:
 	Run: func(cmd *cobra.Command, args []string) {
 
+		// Initを出力して終了する
+		if isInit {
+			PrintInitText()
+		}
+
 		if popd {
 			fmt.Print("popd")
 			os.Exit(0)
@@ -116,10 +121,12 @@ func init() {
 	rootCmd.Flags().BoolVar(&addBookmark, "add", false, "カレントディレクトリをBookmarkします")
 	//popd
 	rootCmd.Flags().BoolVarP(&popd, "popd", "p", false, "popdを使います")
+	//init
+	rootCmd.Flags().BoolVar(&isInit, "init", false, "evalすることでcdxを使えるようにするコマンド列を出力します")
 }
 
 // flags
-var useHistory, useBookmark, addBookmark, popd bool
+var useHistory, useBookmark, addBookmark, popd, isInit bool
 var customSource string
 
 // initConfig reads in config file and ENV variables if set.
@@ -141,6 +148,7 @@ func initConfig() {
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match
+	viper.SetDefault("BinaryPath", filepath.Join(os.Getenv("GOPATH"), "bin", "go-cdx"))
 
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err != nil {
