@@ -43,6 +43,11 @@ var rootCmd = &cobra.Command{
 	// has an action associated with it:
 	Run: func(cmd *cobra.Command, args []string) {
 
+		if popd {
+			fmt.Print("popd")
+			os.Exit(0)
+		}
+
 		if fuz, err := getCdCommandWithFinder(); err == nil {
 			fmt.Println(fuz)
 		} else {
@@ -109,10 +114,12 @@ func init() {
 	rootCmd.Flags().StringVarP(&customSource, "custom", "c", "", "コマンドの出力からcdxします")
 	//add bookmark
 	rootCmd.Flags().BoolVar(&addBookmark, "add", false, "カレントディレクトリをBookmarkします")
+	//popd
+	rootCmd.Flags().BoolVarP(&popd, "popd", "p", false, "popdを使います")
 }
 
 // flags
-var useHistory, useBookmark, addBookmark bool
+var useHistory, useBookmark, addBookmark, popd bool
 var customSource string
 
 // initConfig reads in config file and ENV variables if set.
