@@ -44,6 +44,15 @@ func TestAllFile(t *testing.T) {
 		},
 	}
 
+	t.Run("000_Prepare", func(t *testing.T) {
+		if err := os.MkdirAll(workdir, 0777); err != nil {
+			t.Fatal(err)
+		}
+		TryCreatFiles(config.BookMarkFile)
+		TryCreatFiles(config.HistoryFile)
+
+	})
+
 	t.Run("001_writeInputFile", func(t *testing.T) {
 		f := writeInputFile(&rcd)
 

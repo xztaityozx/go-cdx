@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
+	"os"
 	"strings"
 
 	"github.com/mattn/go-pipeline"
@@ -113,4 +114,11 @@ func AppendRecord(p string, target string) {
 	if err := ioutil.WriteFile(target, b, 0644); err != nil {
 		Fatal(err)
 	}
+}
+
+func TryCreatFiles(p string) error {
+	if _, err := os.Stat(p); err != nil {
+		return ioutil.WriteFile(p, []byte("[]"), 0644)
+	}
+	return nil
 }

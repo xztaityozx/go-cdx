@@ -21,6 +21,8 @@ func TestAllCd(t *testing.T) {
 
 	t.Run("000_Prepare", func(t *testing.T) {
 		os.MkdirAll(workdir, 0777)
+		TryCreatFiles(config.BookMarkFile)
+		TryCreatFiles(config.HistoryFile)
 	})
 
 	t.Run("001_constructCdCommand", func(t *testing.T) {
