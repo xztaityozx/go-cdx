@@ -10,9 +10,9 @@ func TestAllRoot(t *testing.T) {
 		expect := fmt.Sprintf(`cdx(){
 	eval "$(%s $@)"
 }
-touch %s
-touch %s
-`, config.BinaryPath, config.BookMarkFile, config.HistoryFile)
+[ -f %s ] || echo -n "[]" > %s
+[ -f %s ] || echo -n "[]" > %s
+`, config.BinaryPath, config.BookMarkFile, config.BookMarkFile, config.HistoryFile, config.HistoryFile)
 
 		actual := getInitText()
 

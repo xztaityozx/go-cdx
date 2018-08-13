@@ -8,8 +8,8 @@ import (
 var version Version = Version{
 	Major:  1,
 	Minor:  0,
-	Build:  10,
-	Status: "Beta",
+	Build:  12,
+	Status: "Stable",
 	Date:   "2018/08/13",
 }
 

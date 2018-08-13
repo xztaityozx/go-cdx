@@ -57,6 +57,9 @@ var rootCmd = &cobra.Command{
 		// popdを出力して終了します
 		if popd {
 			fmt.Print("popd")
+			if config.NoOutput {
+				fmt.Print(">/dev/null")
+			}
 			os.Exit(0)
 		}
 

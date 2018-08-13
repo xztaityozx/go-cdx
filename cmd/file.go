@@ -57,7 +57,7 @@ func getCdCommandWithFinderFromFile(p string) string {
 		Fatal(err)
 	}
 
-	return constructCdCommand(string(b))
+	return constructCdCommand(strings.Trim(string(b), "\n"))
 }
 
 func getCdCommandWithFinderFromCommand(command string) string {
@@ -71,7 +71,7 @@ func getCdCommandWithFinderFromCommand(command string) string {
 		Fatal(err)
 	}
 
-	return constructCdCommand(string(b))
+	return constructCdCommand(strings.Trim(string(b), "\n"))
 }
 
 func getCustomSorce(name string) (string, error) {
