@@ -55,6 +55,7 @@ func getCdCommandWithFinderFromFile(p string) string {
 	)
 	if err != nil {
 		Fatal(err)
+		os.Exit(1)
 	}
 
 	return constructCdCommand(strings.Trim(string(b), "\n"))
@@ -69,6 +70,7 @@ func getCdCommandWithFinderFromCommand(command string) string {
 
 	if err != nil {
 		Fatal(err)
+		os.Exit(1)
 	}
 
 	return constructCdCommand(strings.Trim(string(b), "\n"))
