@@ -8,7 +8,7 @@ import (
 var version Version = Version{
 	Major:  1,
 	Minor:  0,
-	Build:  12,
+	Build:  13,
 	Status: "Stable",
 	Date:   "2018/08/13",
 }
@@ -30,6 +30,7 @@ License:    MIT`, v.Major, v.Minor, v.Build, v.Status, v.Date)
 }
 
 func PrintVersion() {
-	fmt.Print(version.ToString())
+	os.Stderr.WriteString(version.ToString())
+	os.Stderr.Close()
 	os.Exit(0)
 }
