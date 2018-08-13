@@ -48,6 +48,12 @@ var rootCmd = &cobra.Command{
 			PrintInitText()
 		}
 
+		// versionを出力して終了する
+		if isVersion {
+			PrintVersion()
+		}
+
+		// popdを出力して終了します
 		if popd {
 			fmt.Print("popd")
 			os.Exit(0)
@@ -123,10 +129,12 @@ func init() {
 	rootCmd.Flags().BoolVarP(&popd, "popd", "p", false, "popdを使います")
 	//init
 	rootCmd.Flags().BoolVar(&isInit, "init", false, "evalすることでcdxを使えるようにするコマンド列を出力します")
+	//version
+	rootCmd.Flags().BoolVarP(&isVersion, "version", "v", false, "versionを出力して終了します")
 }
 
 // flags
-var useHistory, useBookmark, addBookmark, popd, isInit bool
+var useHistory, useBookmark, addBookmark, popd, isInit, isVersion bool
 var customSource string
 
 // initConfig reads in config file and ENV variables if set.
