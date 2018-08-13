@@ -25,6 +25,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
@@ -64,7 +65,8 @@ var rootCmd = &cobra.Command{
 		} else {
 			p, _ := os.Getwd()
 			if len(args) != 0 {
-				p, _ = homedir.Expand(args[0])
+				p = strings.Replace(args[0], "~", os.Getenv("HOME"), 1)
+				p, _ = filepath.Abs(p)
 			}
 
 			// Bookmarkして終了
@@ -167,5 +169,8 @@ func initConfig() {
 	if err := viper.Unmarshal(&config); err != nil {
 		log.Fatal(err)
 	}
+
+	config.BookMarkFile, _ = homedir.Expand(config.BookMarkFile)
+	config.HistoryFile, _ = homedir.Expand(config.HistoryFile)
 
 }
