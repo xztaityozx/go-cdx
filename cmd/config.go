@@ -14,6 +14,7 @@ type Config struct {
 	Make         bool
 	CustomSource []CustomSource
 	FuzzyFinder  FuzzyFinder
+	BinaryPath   string
 }
 
 type FuzzyFinder struct {
