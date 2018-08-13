@@ -51,6 +51,12 @@ var rootCmd = &cobra.Command{
 				p, _ = homedir.Expand(args[0])
 			}
 
+			// Bookmarkして終了
+			if addBookmark {
+				AppendRecord(p, config.BookMarkFile)
+				os.Exit(0)
+			}
+
 			if com, err := getCdCommand(p, os.Stderr, os.Stdin); err != nil {
 				Fatal(err)
 			} else {
@@ -101,10 +107,12 @@ func init() {
 	viper.BindPFlag("NoOutput", rootCmd.Flags().Lookup("no-output"))
 	//custom
 	rootCmd.Flags().StringVarP(&customSource, "custom", "c", "", "コマンドの出力からcdxします")
+	//add bookmark
+	rootCmd.Flags().BoolVar(&addBookmark, "add", false, "カレントディレクトリをBookmarkします")
 }
 
 // flags
-var useHistory, useBookmark bool
+var useHistory, useBookmark, addBookmark bool
 var customSource string
 
 // initConfig reads in config file and ENV variables if set.

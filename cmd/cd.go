@@ -34,6 +34,7 @@ func getCdCommand(p string, stderr io.Writer, stdin io.Reader) (string, error) {
 		}
 	}
 
+	AppendRecord(p, config.HistoryFile)
 	return constructCdCommand(p), nil
 }
 
