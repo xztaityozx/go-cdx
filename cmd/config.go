@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"path/filepath"
 )
 
 type Config struct {
@@ -33,8 +32,7 @@ type Record struct {
 }
 
 func (rcd Record) ToString() string {
-	base := filepath.Base(rcd.Path)
-	return fmt.Sprintf("[%4d]\t%s\t%s", rcd.Number, base, rcd.Path)
+	return fmt.Sprintf("[%4d]\t%s", rcd.Number, rcd.Path)
 }
 
 func (s Record) Compare(t Record) bool {

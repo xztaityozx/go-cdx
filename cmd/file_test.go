@@ -63,7 +63,7 @@ func TestAllFile(t *testing.T) {
 		if b, err := ioutil.ReadFile(f); err != nil {
 			t.Fatal(err)
 		} else {
-			expect := []byte("[   1]\tABC\t/path/to/ABC\n[   2]\tDEF\t/path/to/DEF\n[   3]\tGHI\t/path/to/GHI")
+			expect := []byte("[   1]\t/path/to/ABC\n[   2]\t/path/to/DEF\n[   3]\t/path/to/GHI")
 			if bytes.Compare(expect, b) != 0 {
 				t.Fatal("Unexpect file Item")
 			}
