@@ -54,6 +54,11 @@ var rootCmd = &cobra.Command{
 			PrintVersion()
 		}
 
+		// CustomSourceの一覧を出力して終了
+		if csList {
+			printCustomSources()
+		}
+
 		// popdを出力して終了します
 		if popd {
 			fmt.Print("popd")
@@ -136,10 +141,12 @@ func init() {
 	rootCmd.Flags().BoolVar(&isInit, "init", false, "evalすることでcdxを使えるようにするコマンド列を出力します")
 	//version
 	rootCmd.Flags().BoolVarP(&isVersion, "version", "v", false, "versionを出力して終了します")
+	//csList
+	rootCmd.Flags().BoolVar(&csList, "cs-list", false, "CustomSourceの一覧を出力します")
 }
 
 // flags
-var useHistory, useBookmark, addBookmark, popd, isInit, isVersion bool
+var useHistory, useBookmark, addBookmark, popd, isInit, isVersion, csList bool
 var customSource string
 
 // initConfig reads in config file and ENV variables if set.

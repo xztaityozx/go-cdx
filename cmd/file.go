@@ -85,6 +85,19 @@ func getCustomSorce(name string) (string, error) {
 	return "", errors.New(fmt.Sprint(name, "could not found in custom sorce"))
 }
 
+func (cs CustomSource) ToString() string {
+	return fmt.Sprintf("%s\t\t%s\n", cs.Name, cs.Command)
+}
+
+func printCustomSources() {
+	os.Stderr.WriteString("cdx -c [name]\n\n[name]\t\t[command]\n")
+	for _, v := range config.CustomSource {
+		os.Stderr.WriteString(v.ToString())
+	}
+	os.Stderr.Close()
+	os.Exit(0)
+}
+
 func getCdCommandWithFinder() (string, error) {
 
 	if useBookmark {
