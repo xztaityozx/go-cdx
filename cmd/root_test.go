@@ -12,6 +12,7 @@ func TestAllRoot(t *testing.T) {
 }
 [ -f %s ] || echo -n "[]" > %s
 [ -f %s ] || echo -n "[]" > %s
+[ -d $HOME/.config/go-cdx ] || mkdir -p $HOME/.config/go-cdx
 `, config.BinaryPath, config.BookMarkFile, config.BookMarkFile, config.HistoryFile, config.HistoryFile)
 
 		actual := getInitText()
