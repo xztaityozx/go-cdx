@@ -86,8 +86,8 @@ func TestAllFile(t *testing.T) {
 	})
 
 	t.Run("003_getCdCommandWithFinderFromCommand", func(t *testing.T) {
-		actual := getCdCommandWithFinderFromCommand("echo ABC")
-		expect := constructCdCommand("ABC")
+		actual := getPathWithFinderFromCommand("echo ABC")
+		expect := "ABC"
 
 		if expect != actual {
 			t.Fatal(actual, "is not", expect)
@@ -102,8 +102,8 @@ func TestAllFile(t *testing.T) {
 
 		ioutil.WriteFile(tmp.Name(), b, 0644)
 
-		expect := constructCdCommand(rcd[0].Path)
-		actual := getCdCommandWithFinderFromFile(tmp.Name())
+		expect := rcd[0].Path
+		actual := getPathWithFinderFromFile(tmp.Name())
 
 		if expect != actual {
 			t.Fatal(actual, "is not", expect)
@@ -141,6 +141,6 @@ func TestAllFile(t *testing.T) {
 		}
 
 		os.Remove(config.BookMarkFile)
-
 	})
+
 }

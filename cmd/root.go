@@ -25,7 +25,6 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"strings"
 
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
@@ -68,27 +67,27 @@ var rootCmd = &cobra.Command{
 			os.Exit(0)
 		}
 
-		if fuz, err := getCdCommandWithFinder(); err == nil {
-			fmt.Println(fuz)
-		} else {
-			p, _ := os.Getwd()
-			if len(args) != 0 {
-				p = strings.Replace(args[0], "~", os.Getenv("HOME"), 1)
-				p, _ = filepath.Abs(p)
-			}
-
-			// Bookmarkして終了
-			if addBookmark {
-				AppendRecord(p, config.BookMarkFile)
-				os.Exit(0)
-			}
-
-			if com, err := getCdCommand(p, os.Stderr, os.Stdin); err != nil {
-				Fatal(err)
-			} else {
-				fmt.Println(com)
-			}
+		dst := GetDestination(args)
+		if addBookmark {
+			AppendRecord(dst, config.BookMarkFile)
+			fmt.Println("[cdx] Bookmark <-", dst)
+			os.Exit(0)
 		}
+
+		if len(actionCommand) != 0 {
+			act := NewAction(actionCommand, dst)
+			if err := act.Run(); err != nil {
+				Fatal(err)
+			}
+			act.Print()
+		}
+
+		command, err := getCdCommand(dst, os.Stderr, os.Stdin)
+		if err != nil {
+			Fatal(err)
+		}
+		fmt.Print(command)
+
 	},
 }
 
@@ -143,11 +142,13 @@ func init() {
 	rootCmd.Flags().BoolVarP(&isVersion, "version", "v", false, "versionを出力して終了します")
 	//csList
 	rootCmd.Flags().BoolVar(&csList, "cs-list", false, "CustomSourceの一覧を出力します")
+	//action
+	rootCmd.Flags().StringVarP(&actionCommand, "action", "A", "", "移動先で自動的に実行するコマンドを指定できます")
 }
 
 // flags
 var useHistory, useBookmark, addBookmark, popd, isInit, isVersion, csList bool
-var customSource string
+var customSource, actionCommand string
 
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {

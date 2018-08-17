@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/mattn/go-pipeline"
@@ -46,7 +47,7 @@ func getRecordsFromFile(f string) *[]Record {
 	return &res
 }
 
-func getCdCommandWithFinderFromFile(p string) string {
+func getPathWithFinderFromFile(p string) string {
 	in := writeInputFile(getRecordsFromFile(p))
 	b, err := pipeline.Output(
 		[]string{"cat", in},
@@ -58,10 +59,10 @@ func getCdCommandWithFinderFromFile(p string) string {
 		os.Exit(1)
 	}
 
-	return constructCdCommand(strings.Trim(string(b), "\n"))
+	return strings.Trim(string(b), "\n")
 }
 
-func getCdCommandWithFinderFromCommand(command string) string {
+func getPathWithFinderFromCommand(command string) string {
 	b, err := pipeline.Output(
 		[]string{"bash", "-c", command},
 		config.FuzzyFinder.GetCommand(),
@@ -73,7 +74,7 @@ func getCdCommandWithFinderFromCommand(command string) string {
 		os.Exit(1)
 	}
 
-	return constructCdCommand(strings.Trim(string(b), "\n"))
+	return strings.Trim(string(b), "\n")
 }
 
 func getCustomSorce(name string) (string, error) {
@@ -98,18 +99,18 @@ func printCustomSources() {
 	os.Exit(0)
 }
 
-func getCdCommandWithFinder() (string, error) {
+func getPathWithFinder() (string, error) {
 
 	if useBookmark {
-		return getCdCommandWithFinderFromFile(config.BookMarkFile), nil
+		return getPathWithFinderFromFile(config.BookMarkFile), nil
 	} else if useHistory {
-		return getCdCommandWithFinderFromFile(config.HistoryFile), nil
+		return getPathWithFinderFromFile(config.HistoryFile), nil
 	} else if len(customSource) != 0 {
 		name, err := getCustomSorce(customSource)
 		if err != nil {
 			return "", err
 		}
-		return getCdCommandWithFinderFromCommand(name), nil
+		return getPathWithFinderFromCommand(name), nil
 	}
 	return "", errors.New("")
 }
@@ -128,6 +129,19 @@ func AppendRecord(p string, target string) {
 	}
 	if err := ioutil.WriteFile(target, b, 0644); err != nil {
 		Fatal(err)
+	}
+}
+
+func GetDestination(args []string) string {
+	if fuz, err := getPathWithFinder(); err == nil {
+		return fuz
+	} else {
+		p, _ := os.Getwd()
+		if len(args) != 0 {
+			p = strings.Replace(args[0], "~", os.Getenv("HOME"), 1)
+			p, _ = filepath.Abs(p)
+		}
+		return p
 	}
 }
 
