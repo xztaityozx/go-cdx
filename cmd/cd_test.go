@@ -104,6 +104,30 @@ func TestAllCd(t *testing.T) {
 			t.Fatal(actual)
 		}
 	})
+	t.Run("005_cd_contain_space", func(t *testing.T) {
+		p := filepath.Join(workdir, "TEST SPACE")
+		expect := fmt.Sprintf("%s %s", config.Command, filepath.Join(workdir, "TEST\\ SPACE"))
+
+		stdin := bytes.NewBufferString("y")
+		stderr := new(bytes.Buffer)
+
+		config.Make = true
+		actual, err := getCdCommand(p, stderr, stdin)
+
+		if err != nil {
+			t.Fatal(err)
+		}
+		out := []byte(fmt.Sprintf("%s could not found. Make?(y/n)\n>>> ", p))
+
+		if bytes.Compare(out, stderr.Bytes()) != 0 {
+			t.Fatal("Unexpected result stderr", string(stderr.Bytes()))
+		}
+
+		if expect != actual {
+			t.Fatal(actual, "\n", expect)
+		}
+
+	})
 
 	os.RemoveAll(workdir)
 }
