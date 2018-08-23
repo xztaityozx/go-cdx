@@ -8,9 +8,9 @@ import (
 var version Version = Version{
 	Major:  1,
 	Minor:  1,
-	Build:  17,
+	Build:  19,
 	Status: "Beta",
-	Date:   "2018/08/18",
+	Date:   "2018/08/23",
 }
 
 type Version struct {

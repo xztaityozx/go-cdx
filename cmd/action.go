@@ -35,9 +35,7 @@ func (act *CdxAction) Run() error {
 }
 
 func (act CdxAction) Print() {
-	if config.NoOutput {
-		return
-	}
+
 	os.Stderr.Write(act.Output)
 	os.Stderr.Close()
 }

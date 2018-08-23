@@ -70,7 +70,8 @@ var rootCmd = &cobra.Command{
 		dst := GetDestination(args)
 		if addBookmark {
 			AppendRecord(dst, config.BookMarkFile)
-			fmt.Println("[cdx] Bookmark <-", dst)
+
+			fmt.Println("echo \"[cdx] Bookmark <-\"", dst)
 			os.Exit(0)
 		}
 
