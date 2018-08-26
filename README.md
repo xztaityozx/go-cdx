@@ -67,7 +67,7 @@ Please save configuration file to `~/.config/go-cdx/.go-cdx.json`
     "CommandPath":"fuzzy finder",
     "Options":[]
   },
-  "BinaryPath":"/path/to/go-cdx",
+  "BinaryPath":"/path/to/go-cdx"
 }
 
 ```
@@ -90,10 +90,7 @@ $ echo 'eval "$(/path/to/go-cdx --init)"' >> ~/.zshrc # or ~/.bashrc
 ## Usage
 
 ```sh
-go-cdx [--add|-b,--bookmark|--config [file]|
-		-c,--custom [name]|--help|-h,--history|
-		--init|--make|--no-output|-p,--popd|
-		-v,--version] [PATH]
+go-cdx [--add|-b,--bookmark|--config [file]|-c,--custom [name]|--help|-h,--history|--init|--make|--no-output|-p,--popd|-S,--stdin|-v,--version] [PATH]
 ```
 
 
@@ -113,16 +110,17 @@ go-cdx [--add|-b,--bookmark|--config [file]|
 - `-h,--history`
   - histories
 - `--init`
-  - output activate command
+  - output activating command
 - `--make`
   - if distnation directory could not found. cdx makes directory. This option  overwrite config.
 - `--no-output`
   - disable cdx outputs. This option overwrite config
 - `-p,--popd`
   - use popd
+- `-S,--stdin`
+  - read path list from stdin
 - `-v,--version`
   - output version info.
-
 
 
 ## Custom Source
@@ -159,7 +157,7 @@ In `~/.config/go-cdx/.go-cdx.json`
 
 
 
-And run `cdx --custom g`. cdx will provide fuzzy-finder interface like this.  
+And run `cdx --custom g`. cdx will provide fuzzy-finder interface like following image.
 
 ![](img/cdx_c_g.png)
 
@@ -180,6 +178,6 @@ And run `cdx --custom g`. cdx will provide fuzzy-finder interface like this.
 | `FuzzyFinder`  | config for fuzzy-finder                                      |
 | `CommandPath`  | /path/to/fuzzy-finder                                        |
 | `Options`      | list of fuzzy-finder's option                                |
-
+| `BinaryPath`   | /path/to/go-cdx                                              |
 
 

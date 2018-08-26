@@ -100,8 +100,9 @@ func printCustomSources() {
 }
 
 func getPathWithFinder() (string, error) {
-
-	if useBookmark {
+	if fromStdin {
+		return getPathFromStdin(os.Stdin), nil
+	} else if useBookmark {
 		return getPathWithFinderFromFile(config.BookMarkFile), nil
 	} else if useHistory {
 		return getPathWithFinderFromFile(config.HistoryFile), nil
