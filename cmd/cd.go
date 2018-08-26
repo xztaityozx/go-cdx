@@ -34,6 +34,8 @@ func getCdCommand(p string, stderr io.Writer, stdin io.Reader) (string, error) {
 		}
 	}
 
+	p = strings.Replace(p, " ", "\\ ", -1)
+
 	AppendRecord(p, config.HistoryFile)
 	return constructCdCommand(p), nil
 }
