@@ -2,13 +2,11 @@
 
 ![logo](./img/logo.png)
 
-cdx of Go
+cdx is wrapper for cd command. make it extream.
 
 
 
 ## Description
-
-cdx is hyper cd command. 
 
 
 
