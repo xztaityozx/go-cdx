@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -77,37 +76,13 @@ func getPathWithFinderFromCommand(command string) string {
 	return strings.Trim(string(b), "\n")
 }
 
-func getCustomSorce(name string) (string, error) {
-	for _, v := range config.CustomSource {
-		if v.Name == name {
-			return v.Command, nil
-		}
-	}
-	return "", errors.New(fmt.Sprint(name, "could not found in custom sorce"))
-}
-
-func (cs CustomSource) ToString() string {
-	return fmt.Sprintf("%s\t\t%s\n", cs.Name, cs.Command)
-}
-
-func printCustomSources() {
-	os.Stderr.WriteString("cdx -c [name]\n\n[name]\t\t[command]\n")
-	for _, v := range config.CustomSource {
-		os.Stderr.WriteString(v.ToString())
-	}
-	os.Stderr.Close()
-	os.Exit(0)
-}
-
 func getPathWithFinder() (string, error) {
-	if fromStdin {
-		return getPathFromStdin(os.Stdin), nil
-	} else if useBookmark {
+	if useBookmark {
 		return getPathWithFinderFromFile(config.BookMarkFile), nil
 	} else if useHistory {
 		return getPathWithFinderFromFile(config.HistoryFile), nil
 	} else if len(customSource) != 0 {
-		name, err := getCustomSorce(customSource)
+		name, err := getCustomSource(customSource)
 		if err != nil {
 			return "", err
 		}
@@ -146,7 +121,7 @@ func GetDestination(args []string) string {
 	}
 }
 
-func TryCreatFiles(p string) error {
+func TryCreateFiles(p string) error {
 	if _, err := os.Stat(p); err != nil {
 		return ioutil.WriteFile(p, []byte("[]"), 0644)
 	}

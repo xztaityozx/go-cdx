@@ -21,11 +21,6 @@ type FuzzyFinder struct {
 	Options     []string
 }
 
-type CustomSource struct {
-	Name    string
-	Command string
-}
-
 type Record struct {
 	Number int
 	Path   string
@@ -45,6 +40,21 @@ func (ff FuzzyFinder) GetCommand() []string {
 	}
 
 	rt = append(rt, ff.Options...)
+
+	return rt
+}
+
+type Task struct {
+	History       bool
+	Bookmark      bool
+	CustomSources []CustomSource
+}
+
+func NewTask(h, b bool, cs []string) Task {
+	rt := Task{
+		History:  h,
+		Bookmark: b,
+	}
 
 	return rt
 }

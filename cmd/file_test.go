@@ -48,8 +48,8 @@ func TestAllFile(t *testing.T) {
 		if err := os.MkdirAll(workdir, 0777); err != nil {
 			t.Fatal(err)
 		}
-		TryCreatFiles(config.BookMarkFile)
-		TryCreatFiles(config.HistoryFile)
+		TryCreateFiles(config.BookMarkFile)
+		TryCreateFiles(config.HistoryFile)
 
 	})
 
@@ -113,7 +113,7 @@ func TestAllFile(t *testing.T) {
 
 	t.Run("005_getCustomSource", func(t *testing.T) {
 		expect := config.CustomSource[0].Command
-		actual, err := getCustomSorce(config.CustomSource[0].Name)
+		actual, err := getCustomSource(config.CustomSource[0].Name)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -121,7 +121,7 @@ func TestAllFile(t *testing.T) {
 			t.Fatal(actual, "is not", expect)
 		}
 
-		if _, err := getCustomSorce("ABC"); err == nil {
+		if _, err := getCustomSource("ABC"); err == nil {
 			t.Fatal("Unexpected result getCustomSorce")
 		}
 
