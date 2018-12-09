@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"fmt"
 	"os"
 	"os/exec"
 )
@@ -20,22 +19,21 @@ func NewAction(command string, dst string) CdxAction {
 	}
 }
 
-func (act *CdxAction) Run() error {
-
-	com := fmt.Sprintf("cd %s && %s", act.Destnation, act.Command)
-
-	command := exec.Command("bash", "-c", com)
-
-	if b, err := command.Output(); err != nil {
-		return err
-	} else {
-		act.Output = b
+func (act *CdxAction) Run() {
+	err := os.Chdir(act.Destnation)
+	if err != nil {
+		Fatal(err)
 	}
-	return nil
+
+	command := exec.Command("bash","-c",act.Command)
+	act.Output, err = command.Output()
+	if err != nil {
+		Fatal(err)
+	}
 }
 
 func (act CdxAction) Print() {
 
-	os.Stderr.Write(act.Output)
-	os.Stderr.Close()
+	_:os.Stderr.Write(act.Output)
+	_:os.Stderr.Close()
 }

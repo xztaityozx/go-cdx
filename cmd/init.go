@@ -19,8 +19,8 @@ func getInitText() string {
 	return fmt.Sprintf(`cdx(){
 	eval "$(%s $@)"
 }
-[ -f %s ] || echo -n "[]" > %s
-[ -f %s ] || echo -n "[]" > %s
+[ -f %s ] || touch %s
+[ -f %s ] || touch %s
 [ -d $HOME/.config/go-cdx ] || mkdir -p $HOME/.config/go-cdx
 `, config.BinaryPath, config.BookMarkFile, config.BookMarkFile, config.HistoryFile, config.HistoryFile)
 }

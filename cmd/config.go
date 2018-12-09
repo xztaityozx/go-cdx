@@ -9,7 +9,6 @@ type Config struct {
 	BookMarkFile string
 	Command      string
 	NoOutput     bool
-	UseSSH       bool
 	Make         bool
 	CustomSource []CustomSource
 	FuzzyFinder  FuzzyFinder
@@ -44,17 +43,3 @@ func (ff FuzzyFinder) GetCommand() []string {
 	return rt
 }
 
-type Task struct {
-	History       bool
-	Bookmark      bool
-	CustomSources []CustomSource
-}
-
-func NewTask(h, b bool, cs []string) Task {
-	rt := Task{
-		History:  h,
-		Bookmark: b,
-	}
-
-	return rt
-}

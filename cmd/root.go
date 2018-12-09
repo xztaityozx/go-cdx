@@ -22,13 +22,12 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/mitchellh/go-homedir"
+	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 	"log"
 	"os"
 	"path/filepath"
-
-	homedir "github.com/mitchellh/go-homedir"
-	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 var cfgFile string
@@ -67,7 +66,13 @@ var rootCmd = &cobra.Command{
 			os.Exit(0)
 		}
 
-		dst := GetDestination(args)
+
+		dst, actions,err := GetDestination(args)
+		if err != nil {
+			_:os.Stderr.WriteString(err.Error()+"\n")
+			_:os.Stdout.WriteString("return 1")
+			return
+		}
 		if addBookmark {
 			AppendRecord(dst, config.BookMarkFile)
 
@@ -75,20 +80,20 @@ var rootCmd = &cobra.Command{
 			os.Exit(0)
 		}
 
-		if len(actionCommand) != 0 {
-			act := NewAction(actionCommand, dst)
-			if err := act.Run(); err != nil {
-				Fatal(err)
-			}
-			act.Print()
+		// Action
+		if len(actionCommand) != 0 || len(actions) != 0 {
+			act := NewAction(actionCommand+";"+actions,dst)
+			act.Run()
+			_:os.Stderr.Write(act.Output)
 		}
 
-		command, err := getCdCommand(dst, os.Stderr, os.Stdin)
+		command, err := getCdCommand(dst)
 		if err != nil {
 			Fatal(err)
 		}
 		fmt.Print(command)
 
+		AppendRecord(dst,config.HistoryFile)
 	},
 }
 
@@ -148,7 +153,7 @@ func init() {
 }
 
 // flags
-var useHistory, useBookmark, addBookmark, popd, isInit, isVersion, csList, fromStdin bool
+var useHistory, useBookmark, addBookmark, popd, isInit, isVersion, csList bool
 var customSource, actionCommand string
 
 // initConfig reads in config file and ENV variables if set.
@@ -184,5 +189,17 @@ func initConfig() {
 
 	config.BookMarkFile, _ = homedir.Expand(config.BookMarkFile)
 	config.HistoryFile, _ = homedir.Expand(config.HistoryFile)
+
+	HistoryCustomSource = CustomSource{
+		SubName:     'h',
+		Command:     fmt.Sprintf("cat %s",config.HistoryFile),
+		BeginColumn: 1,
+	}
+	BookmarkCustomSource = CustomSource{
+		SubName:     'b',
+		Command:     fmt.Sprintf("cat %s",config.BookMarkFile),
+		BeginColumn: 1,
+	}
+
 
 }
