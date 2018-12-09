@@ -22,9 +22,7 @@ func TestAllAction(t *testing.T) {
 
 	t.Run("002_Run", func(t *testing.T) {
 		act := NewAction("echo abc", home)
-		if err := act.Run(); err != nil {
-			t.Fatal(err)
-		}
+		act.Run()
 		if bytes.Compare(act.Output, []byte("abc\n")) != 0 {
 			t.Fatal("Unexpected result : ", act.Output)
 		}

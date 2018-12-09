@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"bytes"
-	"fmt"
 	"os"
 	"path/filepath"
 	"testing"
@@ -16,13 +14,10 @@ func TestAllCd(t *testing.T) {
 		Command:      "echo",
 		Make:         false,
 		NoOutput:     false,
-		UseSSH:       false,
 	}
 
 	t.Run("000_Prepare", func(t *testing.T) {
 		os.MkdirAll(workdir, 0777)
-		TryCreatFiles(config.BookMarkFile)
-		TryCreatFiles(config.HistoryFile)
 	})
 
 	t.Run("001_constructCdCommand", func(t *testing.T) {
@@ -45,9 +40,7 @@ func TestAllCd(t *testing.T) {
 	})
 
 	t.Run("002_cd", func(t *testing.T) {
-		stdin := bytes.NewBufferString("y")
-		stderr := new(bytes.Buffer)
-		actual, err := getCdCommand(workdir, stderr, stdin)
+		actual, err := getCdCommand(workdir)
 
 		if err != nil {
 			t.Fatal(err)
@@ -59,74 +52,111 @@ func TestAllCd(t *testing.T) {
 			t.Fatal(actual)
 		}
 	})
-	t.Run("003_cd_Make_No", func(t *testing.T) {
-		stdin := bytes.NewBufferString("n")
-		stderr := new(bytes.Buffer)
 
-		config.Make = true
-
-		p := filepath.Join(workdir, "TEST_MAKE1")
-
-		_, err := getCdCommand(p, stderr, stdin)
-
-		if err == nil {
-			t.Fatal("Unexpected Success")
+	t.Run("003_GetDestination_cs_1", func(t *testing.T){
+		config.CustomSource = []CustomSource{
+			{
+				Name:"u",
+				SubName:     'u',
+				BeginColumn: 2,
+				Command:     "yes first second|head -n1",
+				Action:      "",
+			},
+		}
+		config.FuzzyFinder = FuzzyFinder{
+			CommandPath:"cat",
 		}
 
-		out := []byte(fmt.Sprintf("%s could not found. Make?(y/n)\n>>> ", p))
 
-		if bytes.Compare(out, stderr.Bytes()) != 0 {
-			t.Fatal("Unexpected result stderr", string(stderr.Bytes()))
-		}
-	})
-	t.Run("004_cd_Make_Yes", func(t *testing.T) {
-		stdin := bytes.NewBufferString("y")
-		stderr := new(bytes.Buffer)
+		customSource="u"
+		actual, _, _ := GetDestination([]string{})
+		expect := "second"
 
-		config.Make = true
-
-		p := filepath.Join(workdir, "TEST_MAKE1")
-
-		actual, err := getCdCommand(p, stderr, stdin)
-
-		if err != nil {
-			t.Fatal(err)
-		}
-
-		expect := constructCdCommand(p)
-		out := []byte(fmt.Sprintf("%s could not found. Make?(y/n)\n>>> ", p))
-
-		if bytes.Compare(out, stderr.Bytes()) != 0 {
-			t.Fatal("Unexpected result stderr", string(stderr.Bytes()))
-		}
-
-		if expect != actual {
-			t.Fatal(actual)
+		if actual!=expect{
+			Fatal(actual,"is not",expect)
 		}
 	})
-	t.Run("005_cd_contain_space", func(t *testing.T) {
-		p := filepath.Join(workdir, "TEST SPACE")
-		expect := fmt.Sprintf("%s %s", config.Command, filepath.Join(workdir, "TEST\\ SPACE"))
-
-		stdin := bytes.NewBufferString("y")
-		stderr := new(bytes.Buffer)
-
-		config.Make = true
-		actual, err := getCdCommand(p, stderr, stdin)
-
-		if err != nil {
-			t.Fatal(err)
+	t.Run("004_GetDestination_cs_uk", func(t *testing.T){
+		config.CustomSource = []CustomSource{
+			{
+				SubName:     'u',
+				BeginColumn: 2,
+				Command:     "echo command u",
+				Action:      "",
+			},
+			{
+				SubName:     'k',
+				BeginColumn: 1,
+				Command:     "echo command k",
+				Action:      "",
+			},
 		}
-		out := []byte(fmt.Sprintf("%s could not found. Make?(y/n)\n>>> ", p))
-
-		if bytes.Compare(out, stderr.Bytes()) != 0 {
-			t.Fatal("Unexpected result stderr", string(stderr.Bytes()))
-		}
-
-		if expect != actual {
-			t.Fatal(actual, "\n", expect)
+		config.FuzzyFinder = FuzzyFinder{
+			CommandPath:"head",
+			Options: []string{"-n1"},
 		}
 
+
+		customSource="uk"
+		actual, _, _ := GetDestination([]string{})
+		expect := "u"
+
+		if actual!=expect{
+			Fatal(actual,"is not",expect)
+		}
+	})
+	t.Run("005_GetDestination_cs_ku", func(t *testing.T){
+		config.CustomSource = []CustomSource{
+			{
+				SubName:     'u',
+				BeginColumn: 2,
+				Command:     "echo command u",
+				Action:      "",
+			},
+			{
+				SubName:     'k',
+				BeginColumn: 1,
+				Command:     "echo command k",
+				Action:      "",
+			},
+		}
+		config.FuzzyFinder = FuzzyFinder{
+			CommandPath:"head",
+			Options: []string{"-n1"},
+		}
+
+
+		customSource="ku"
+		actual, _,_ := GetDestination([]string{})
+		expect := "command k"
+
+		if actual!=expect{
+			Fatal(actual,"is not",expect)
+		}
+	})
+	t.Run("006_GetDestination_no_finder", func(t *testing.T){
+		useBookmark=false
+		useHistory=false
+		customSource=""
+		actual, _,_ := GetDestination([]string{"~/"})
+		expect := filepath.Join(os.Getenv("HOME"))
+
+		if actual!=expect{
+			Fatal(actual,"is not",expect)
+		}
+	})
+
+	t.Run("006_GetDestination_wd", func(t *testing.T){
+		useBookmark=false
+		useHistory=false
+		customSource=""
+		actual, _,_ := GetDestination([]string{})
+		wd,_:=os.Getwd()
+		expect := filepath.Join(wd)
+
+		if actual!=expect{
+			Fatal(actual,"is not",expect)
+		}
 	})
 
 	os.RemoveAll(workdir)
