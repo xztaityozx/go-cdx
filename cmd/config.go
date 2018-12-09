@@ -9,7 +9,6 @@ type Config struct {
 	BookMarkFile string
 	Command      string
 	NoOutput     bool
-	UseSSH       bool
 	Make         bool
 	CustomSource []CustomSource
 	FuzzyFinder  FuzzyFinder
@@ -19,11 +18,6 @@ type Config struct {
 type FuzzyFinder struct {
 	CommandPath string
 	Options     []string
-}
-
-type CustomSource struct {
-	Name    string
-	Command string
 }
 
 type Record struct {
@@ -48,3 +42,4 @@ func (ff FuzzyFinder) GetCommand() []string {
 
 	return rt
 }
+
