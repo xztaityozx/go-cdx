@@ -6,11 +6,11 @@ import (
 )
 
 var version Version = Version{
-	Major:  1,
-	Minor:  1,
-	Build:  21,
-	Status: "Stable",
-	Date:   "2018/08/27",
+	Major:  2,
+	Minor:  0,
+	Build:  25,
+	Status: "Beta",
+	Date:   "2018/12/09",
 }
 
 type Version struct {
