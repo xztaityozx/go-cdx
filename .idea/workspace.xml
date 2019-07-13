@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="5201848a-5d75-4e50-9af1-3e64a713ce32" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/go-cdx.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/config/config.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/customsource/customsource.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/fuzzyfinder/fuzzyfinder.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.travis.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.travis.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LICENSE" beforeDir="false" afterPath="$PROJECT_DIR$/LICENSE" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/action.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/action_test.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/cd.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/cd_test.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/config.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/file.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/file_test.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/fromStdin.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/fromStdin_test.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/init.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/log.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/root.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/root.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/root_test.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/version.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/cdx_c_g.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/logo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="DatabaseView">
+    <option name="SHOW_INTERMEDIATE" value="true" />
+    <option name="GROUP_DATA_SOURCES" value="true" />
+    <option name="GROUP_SCHEMA" value="true" />
+    <option name="GROUP_CONTENTS" value="false" />
+    <option name="SORT_POSITIONED" value="false" />
+    <option name="SHOW_EMPTY_GROUPS" value="false" />
+    <option name="AUTO_SCROLL_FROM_SOURCE" value="false" />
+    <option name="HIDDEN_KINDS">
+      <set />
+    </option>
+    <expand />
+    <select />
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/customsource/customsource.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="756">
+              <caret line="34" column="42" selection-start-line="34" selection-start-column="42" selection-end-line="34" selection-end-column="42" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/cmd/root.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="532">
+              <caret line="63" column="13" selection-start-line="63" selection-start-column="13" selection-end-line="63" selection-end-column="13" />
+              <folding>
+                <element signature="e#1120#1425#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../../b4b4r07/go-finder/finder.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="196">
+              <caret line="14" column="19" lean-forward="true" selection-start-line="14" selection-start-column="19" selection-end-line="14" selection-end-column="19" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/../../b4b4r07/go-finder/source/source.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-1540">
+              <caret line="14" column="5" selection-start-line="14" selection-start-column="5" selection-end-line="14" selection-end-column="5" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/config/config.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="616">
+              <caret line="22" selection-start-line="22" selection-end-line="22" />
+              <folding>
+                <element signature="e#16#115#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/fuzzyfinder/fuzzyfinder.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="736">
+              <caret line="68" column="28" selection-start-line="68" selection-start-column="28" selection-end-line="68" selection-end-column="28" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Go File" />
+      </list>
+    </option>
+  </component>
+  <component name="GOROOT" path="$PROJECT_DIR$/../../../../../../linuxbrew/.linuxbrew/Cellar/go/1.12.5/libexec" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/cmd/version.go" />
+        <option value="$PROJECT_DIR$/cmd/file.go" />
+        <option value="$PROJECT_DIR$/cmd/file_test.go" />
+        <option value="$PROJECT_DIR$/cmd/cd_test.go" />
+        <option value="$PROJECT_DIR$/cmd/CustomSource_test.go" />
+        <option value="$PROJECT_DIR$/cmd/CustomSource.go" />
+        <option value="$PROJECT_DIR$/cmd/config.go" />
+        <option value="$PROJECT_DIR$/cd/cd.go" />
+        <option value="$PROJECT_DIR$/cd/cd_test.go" />
+        <option value="$PROJECT_DIR$/cmd/customsource_test.go" />
+        <option value="$PROJECT_DIR$/customsource/customsource_test.go" />
+        <option value="$PROJECT_DIR$/fuzzyfuinder/fuzzyfinder.go" />
+        <option value="$PROJECT_DIR$/fuzzyfinder/fuzzyfinder_test.go" />
+        <option value="$PROJECT_DIR$/.travis.yml" />
+        <option value="$PROJECT_DIR$/config/config.go" />
+        <option value="$PROJECT_DIR$/customsource/customsource.go" />
+        <option value="$PROJECT_DIR$/fuzzyfinder/fuzzyfinder.go" />
+        <option value="$PROJECT_DIR$/cmd/root.go" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="260" />
+    <option name="y" value="60" />
+    <option name="width" value="1400" />
+    <option name="height" value="1000" />
+  </component>
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="go-cdx" type="b2602c69:ProjectViewProjectNode" />
+              <item name="go-cdx" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="go-cdx" type="b2602c69:ProjectViewProjectNode" />
+              <item name="go-cdx" type="462c0819:PsiDirectoryNode" />
+              <item name="cmd" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="go-cdx" type="b2602c69:ProjectViewProjectNode" />
+              <item name="go-cdx" type="462c0819:PsiDirectoryNode" />
+              <item name="config" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="go-cdx" type="b2602c69:ProjectViewProjectNode" />
+              <item name="go-cdx" type="462c0819:PsiDirectoryNode" />
+              <item name="customsource" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="go-cdx" type="b2602c69:ProjectViewProjectNode" />
+              <item name="go-cdx" type="462c0819:PsiDirectoryNode" />
+              <item name="fuzzyfinder" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="Scope" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="DefaultGoTemplateProperty" value="Go File" />
+    <property name="GO_FMT" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="SearchEverywhereHistoryKey" value="Commit&#9;ACTION&#9;CheckinProject&#10;Go Dec&#9;ACTION&#9;VimGotoDeclaration&#10;Cus&#9;FILE&#9;file:///home/xztaityozx/.go/src/github.com/xztaityozx/go-cdx/cmd/CustomSource_test.go&#10;New&#9;ACTION&#9;NewGroup&#10;file_&#9;FILE&#9;file:///home/xztaityozx/.go/src/github.com/xztaityozx/go-cdx/cmd/file_test.go&#10;Rena&#9;ACTION&#9;RenameElement&#10;versio&#9;FILE&#9;file:///home/xztaityozx/.go/src/github.com/xztaityozx/go-cdx/cmd/version.go&#10;Rename&#9;ACTION&#9;RenameElement&#10;printCu&#9;null&#9;null&#10;Custom&#9;null&#9;null&#10;root&#9;FILE&#9;file:///home/xztaityozx/.go/src/github.com/xztaityozx/go-cdx/cmd/root.go" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="go.gopath.indexing.explicitly.defined" value="true" />
+    <property name="go.import.settings.migrated" value="true" />
+    <property name="go.sdk.automatically.set" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.VCS" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/customsource" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected="Go Test.TestFuzzyFinder_Get in github.com/xztaityozx/go-cdx/fuzzyfinder">
+    <configuration name="TestAllCustomSource/001_BuildMultipleCustomSource in github.com/xztaityozx/go-cdx/cmd" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="go-cdx" />
+      <working_directory value="$PROJECT_DIR$/cmd" />
+      <framework value="gotest" />
+      <kind value="PACKAGE" />
+      <package value="github.com/xztaityozx/go-cdx/cmd" />
+      <directory value="$PROJECT_DIR$/" />
+      <filePath value="$PROJECT_DIR$/" />
+      <pattern value="^TestAllCustomSource$/^001_BuildMultipleCustomSource$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="TestFuzzyFinder_Get in github.com/xztaityozx/go-cdx/fuzzyfinder" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="go-cdx" />
+      <working_directory value="$PROJECT_DIR$/fuzzyfinder" />
+      <framework value="gotest" />
+      <kind value="PACKAGE" />
+      <package value="github.com/xztaityozx/go-cdx/fuzzyfinder" />
+      <directory value="$PROJECT_DIR$/" />
+      <filePath value="$PROJECT_DIR$/" />
+      <pattern value="^TestFuzzyFinder_Get$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="TestPrintCustomSource in github.com/xztaityozx/go-cdx/customsource" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="go-cdx" />
+      <working_directory value="$PROJECT_DIR$/customsource" />
+      <framework value="gotest" />
+      <kind value="PACKAGE" />
+      <package value="github.com/xztaityozx/go-cdx/customsource" />
+      <directory value="$PROJECT_DIR$/" />
+      <filePath value="$PROJECT_DIR$/" />
+      <pattern value="^TestPrintCustomSource$" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Go Test.TestFuzzyFinder_Get in github.com/xztaityozx/go-cdx/fuzzyfinder" />
+        <item itemvalue="Go Test.TestPrintCustomSource in github.com/xztaityozx/go-cdx/customsource" />
+        <item itemvalue="Go Test.TestAllCustomSource/001_BuildMultipleCustomSource in github.com/xztaityozx/go-cdx/cmd" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="TestHistory">
+    <history-entry file="TestPrintCustomSource_in_github_com_xztaityozx_go-cdx_customsource - 2019.06.28 at 14h 27m 20s.xml">
+      <configuration name="TestPrintCustomSource in github.com/xztaityozx/go-cdx/customsource" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="TestPrintCustomSource_in_github_com_xztaityozx_go-cdx_customsource - 2019.06.28 at 14h 27m 51s.xml">
+      <configuration name="TestPrintCustomSource in github.com/xztaityozx/go-cdx/customsource" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="TestPrintCustomSource_in_github_com_xztaityozx_go-cdx_customsource - 2019.06.28 at 14h 28m 14s.xml">
+      <configuration name="TestPrintCustomSource in github.com/xztaityozx/go-cdx/customsource" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="TestPrintCustomSource_in_github_com_xztaityozx_go-cdx_customsource - 2019.06.28 at 14h 29m 40s.xml">
+      <configuration name="TestPrintCustomSource in github.com/xztaityozx/go-cdx/customsource" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="TestPrintCustomSource_in_github_com_xztaityozx_go-cdx_customsource - 2019.06.28 at 14h 30m 25s.xml">
+      <configuration name="TestPrintCustomSource in github.com/xztaityozx/go-cdx/customsource" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="TestFuzzyFinder_Get_in_github_com_xztaityozx_go-cdx_fuzzyfinder - 2019.06.28 at 14h 36m 38s.xml">
+      <configuration name="TestFuzzyFinder_Get in github.com/xztaityozx/go-cdx/fuzzyfinder" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="TestFuzzyFinder_Get_in_github_com_xztaityozx_go-cdx_fuzzyfinder - 2019.06.28 at 16h 02m 47s.xml">
+      <configuration name="TestFuzzyFinder_Get in github.com/xztaityozx/go-cdx/fuzzyfinder" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="TestFuzzyFinder_Get_in_github_com_xztaityozx_go-cdx_fuzzyfinder - 2019.06.28 at 16h 03m 03s.xml">
+      <configuration name="TestFuzzyFinder_Get in github.com/xztaityozx/go-cdx/fuzzyfinder" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="TestFuzzyFinder_Get_in_github_com_xztaityozx_go-cdx_fuzzyfinder - 2019.06.28 at 16h 03m 29s.xml">
+      <configuration name="TestFuzzyFinder_Get in github.com/xztaityozx/go-cdx/fuzzyfinder" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="TestFuzzyFinder_Get_in_github_com_xztaityozx_go-cdx_fuzzyfinder - 2019.06.28 at 16h 03m 35s.xml">
+      <configuration name="TestFuzzyFinder_Get in github.com/xztaityozx/go-cdx/fuzzyfinder" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="64" y="-11" width="1857" height="1092" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info id="Favorites" order="0" side_tool="true" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" auto_hide="true" id="Find" order="1" weight="0.3292683" />
+      <window_info anchor="bottom" id="Debug" order="2" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="3" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="4" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="5" />
+      <window_info anchor="bottom" id="Database Changes" order="6" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="7" />
+      <window_info anchor="bottom" id="Terminal" order="8" />
+      <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
+      <window_info anchor="bottom" auto_hide="true" id="Messages" order="10" weight="0.32983872" />
+      <window_info anchor="bottom" id="Docker" order="11" show_stripe_button="false" />
+      <window_info anchor="bottom" auto_hide="true" id="Run" order="12" weight="0.3262195" />
+      <window_info anchor="right" id="Database" order="0" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="1" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="2" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="3" weight="0.25" />
+      <window_info active="true" anchor="right" content_ui="combo" id="Project" order="4" visible="true" weight="0.12119535" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="branched onSameTime" />
+    <option name="LAST_COMMIT_MESSAGE" value="branched onSameTime" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/cmd/fromStdin.go" />
+    <entry file="file://$PROJECT_DIR$/cmd/file_test.go" />
+    <entry file="file://$PROJECT_DIR$/cmd/CustomSource_test.go" />
+    <entry file="file://$PROJECT_DIR$/cmd/version.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="868">
+          <caret line="34" column="12" lean-forward="true" selection-start-line="34" selection-start-column="12" selection-end-line="34" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cmd/file.go" />
+    <entry file="file://$PROJECT_DIR$/cmd/cd_test.go" />
+    <entry file="file://$PROJECT_DIR$/cd/cd_test.go" />
+    <entry file="file://$PROJECT_DIR$/cmd/cd.go" />
+    <entry file="file://$PROJECT_DIR$/cd/cd.go" />
+    <entry file="file://$PROJECT_DIR$/customsource/customsource_test.go" />
+    <entry file="file://$PROJECT_DIR$/cmd/config.go" />
+    <entry file="file://$PROJECT_DIR$/fuzzyfinder/fuzzyfinder_test.go" />
+    <entry file="file://$PROJECT_DIR$/cmd/CustomSource.go" />
+    <entry file="file://$PROJECT_DIR$/cmd/action.go" />
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="140">
+          <caret line="5" column="6" selection-start-line="5" selection-start-column="6" selection-end-line="5" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.travis.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="56">
+          <caret line="2" column="19" selection-start-line="2" selection-start-column="19" selection-end-line="2" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="336">
+          <caret line="12" column="44" selection-start-line="12" selection-start-column="44" selection-end-line="12" selection-end-column="44" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config/config.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="616">
+          <caret line="22" selection-start-line="22" selection-end-line="22" />
+          <folding>
+            <element signature="e#16#115#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/customsource/customsource.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="756">
+          <caret line="34" column="42" selection-start-line="34" selection-start-column="42" selection-end-line="34" selection-end-column="42" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fuzzyfinder/fuzzyfinder.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="736">
+          <caret line="68" column="28" selection-start-line="68" selection-start-column="28" selection-end-line="68" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cmd/root.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="532">
+          <caret line="63" column="13" selection-start-line="63" selection-start-column="13" selection-end-line="63" selection-end-column="13" />
+          <folding>
+            <element signature="e#1120#1425#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../b4b4r07/go-finder/finder.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="196">
+          <caret line="14" column="19" lean-forward="true" selection-start-line="14" selection-start-column="19" selection-end-line="14" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../b4b4r07/go-finder/source/source.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1540">
+          <caret line="14" column="5" selection-start-line="14" selection-start-column="5" selection-end-line="14" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>

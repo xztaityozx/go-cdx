@@ -1,4 +1,4 @@
-// Copyright © 2018 NAME HERE <EMAIL ADDRESS>
+// Copyright © 2019 xztaityozx
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,7 +22,10 @@ package cmd
 
 import (
 	"fmt"
-	"log"
+	"github.com/b4b4r07/go-finder"
+	"github.com/b4b4r07/go-finder/source"
+	"github.com/sirupsen/logrus"
+	"github.com/xztaityozx/go-cdx/config"
 	"os"
 	"path/filepath"
 
@@ -32,63 +35,50 @@ import (
 )
 
 var cfgFile string
-var config Config
+var cfg config.Config
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "go-cdx",
 	Short: "",
 	Long:  ``,
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
 	Run: func(cmd *cobra.Command, args []string) {
+		//cs := customsource.CustomSource{
+		//	Commands:[][]string{
+		//		{"ls","-1","./"},
+		//	},
+		//	Name:"ls",
+		//	Alias:'l',
+		//}
 
-		// Initを出力して終了する
-		if isInit {
-			PrintInitText()
-		}
+		//ff := fuzzyfinder.FuzzyFinder{
+		//	Path:"fzf",
+		//	Options:[]string{"-1","-0"},
+		//}
 
-		// versionを出力して終了する
-		if isVersion {
-			PrintVersion()
-		}
-
-		// CustomSourceの一覧を出力して終了
-		if csList {
-			printCustomSources()
-		}
-
-		// popdを出力して終了します
-		if popd {
-			fmt.Print("popd")
-			if config.NoOutput {
-				fmt.Print(">/dev/null")
-			}
-			os.Exit(0)
-		}
-
-		dst := GetDestination(args)
-		if addBookmark {
-			AppendRecord(dst, config.BookMarkFile)
-
-			fmt.Println("echo \"[cdx] Bookmark <-\"", dst)
-			os.Exit(0)
-		}
-
-		if len(actionCommand) != 0 {
-			act := NewAction(actionCommand, dst)
-			if err := act.Run(); err != nil {
-				Fatal(err)
-			}
-			act.Print()
-		}
-
-		command, err := getCdCommand(dst, os.Stderr, os.Stdin)
+		f, err := finder.New("fzf","-1","-0")
 		if err != nil {
-			Fatal(err)
+			logrus.Fatal(err)
 		}
-		fmt.Print(command)
 
+		f.Read(source.Command("ls","./"))
+		f.Read(source.Command("ls","/"))
+
+		items, err := f.Run()
+		if err != nil {
+			logrus.Fatal(err)
+		}
+
+		for _, v := range items {
+			logrus.Info(v)
+		}
+
+		//res, err := ff.Start(context.Background(), []customsource.CustomSource{cs})
+		//if err != nil {
+		//	logrus.Fatal(err)
+		//}
+		//
+		//logrus.Info(res)
 	},
 }
 
@@ -107,51 +97,12 @@ func init() {
 	// Here you will define your flags and configuration settings.
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
-	home, err := homedir.Dir()
-	if err != nil {
-		log.Fatal(err)
-	}
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.go-cdx.yaml)")
 
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "",
-		fmt.Sprint("config file default :", filepath.Join(home, ".config", "cdx", ".go-cdx.json")))
-	rootCmd.Flags().Bool("help", false, "help")
-
-	rootCmd.SetHelpFunc(func(cmd *cobra.Command, args []string) {
-		cmd.Usage()
-		os.Exit(1)
-	})
-
-	//history
-	rootCmd.Flags().BoolVarP(&useHistory, "history", "h", false, "ブックマークからcdxします")
-	//bookmark
-	rootCmd.Flags().BoolVarP(&useBookmark, "bookmark", "b", false, "ブックマークからcdxします")
-	//make
-	rootCmd.Flags().Bool("make", false, "ディレクトリが無い場合、作ってから移動します")
-	viper.BindPFlag("make", rootCmd.Flags().Lookup("make"))
-	//no-output
-	rootCmd.Flags().Bool("no-output", false, "Stdoutに何も出力しません")
-	viper.BindPFlag("NoOutput", rootCmd.Flags().Lookup("no-output"))
-	//custom
-	rootCmd.Flags().StringVarP(&customSource, "custom", "c", "", "コマンドの出力からcdxします")
-	//add bookmark
-	rootCmd.Flags().BoolVar(&addBookmark, "add", false, "カレントディレクトリをBookmarkします")
-	//popd
-	rootCmd.Flags().BoolVarP(&popd, "popd", "p", false, "popdを使います")
-	//init
-	rootCmd.Flags().BoolVar(&isInit, "init", false, "evalすることでcdxを使えるようにするコマンド列を出力します")
-	//version
-	rootCmd.Flags().BoolVarP(&isVersion, "version", "v", false, "versionを出力して終了します")
-	//csList
-	rootCmd.Flags().BoolVar(&csList, "cs-list", false, "CustomSourceの一覧を出力します")
-	//action
-	rootCmd.Flags().StringVarP(&actionCommand, "action", "A", "", "移動先で自動的に実行するコマンドを指定できます")
-	//stdin
-	rootCmd.Flags().BoolVarP(&fromStdin, "stdin", "S", false, "Stdinから移動先のリストを受け取ります")
+	// Cobra also supports local flags, which will only run
+	// when this action is called directly.
+	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
-
-// flags
-var useHistory, useBookmark, addBookmark, popd, isInit, isVersion, csList, fromStdin bool
-var customSource, actionCommand string
 
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
@@ -172,19 +123,14 @@ func initConfig() {
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match
-	viper.SetDefault("BinaryPath", filepath.Join(os.Getenv("GOPATH"), "bin", "go-cdx"))
 
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err != nil {
-		//fmt.Println("Using config file:", viper.ConfigFileUsed())
-		log.Fatal(err)
+		logrus.WithError(err).Fatal("[cdx] failed read config file")
 	}
 
-	if err := viper.Unmarshal(&config); err != nil {
-		log.Fatal(err)
+	if err := viper.Unmarshal(&cfg); err != nil {
+		logrus.WithError(err).Fatal("[cdx] failed unmarshal config file")
 	}
-
-	config.BookMarkFile, _ = homedir.Expand(config.BookMarkFile)
-	config.HistoryFile, _ = homedir.Expand(config.HistoryFile)
-
 }
+
