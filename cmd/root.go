@@ -21,13 +21,15 @@
 package cmd
 
 import (
+	"context"
 	"fmt"
-	"github.com/b4b4r07/go-finder"
-	"github.com/b4b4r07/go-finder/source"
-	"github.com/sirupsen/logrus"
-	"github.com/xztaityozx/go-cdx/config"
 	"os"
 	"path/filepath"
+
+	"github.com/sirupsen/logrus"
+	"github.com/xztaityozx/go-cdx/config"
+	"github.com/xztaityozx/go-cdx/customsource"
+	"github.com/xztaityozx/go-cdx/fuzzyfinder"
 
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
@@ -51,34 +53,34 @@ var rootCmd = &cobra.Command{
 		//	Alias:'l',
 		//}
 
-		//ff := fuzzyfinder.FuzzyFinder{
-		//	Path:"fzf",
-		//	Options:[]string{"-1","-0"},
-		//}
+		sc := customsource.SourceCollection{
+			{
+				Name:    "ls-pwd",
+				Command: "ls -1 ./",
+			},
+			{
+				Name:    "ls-root",
+				Command: "ls -1 /",
+			},
+			{
+				Name:       "ghq-list",
+				Command:    "ghq list | xargs -n1 -I@ echo 'echo -e \"$(basename @) $(ghq root)/@\"'|bash|column -t",
+				BeginColum: 1,
+			},
+		}
 
-		f, err := finder.New("fzf","-1","-0")
+		ff := fuzzyfinder.FuzzyFinder{
+			Path:    "fzf",
+			Options: []string{"-1", "-0"},
+		}
+
+		res, err := ff.Run(context.Background(), sc)
 		if err != nil {
 			logrus.Fatal(err)
 		}
 
-		f.Read(source.Command("ls","./"))
-		f.Read(source.Command("ls","/"))
+		logrus.Info(res)
 
-		items, err := f.Run()
-		if err != nil {
-			logrus.Fatal(err)
-		}
-
-		for _, v := range items {
-			logrus.Info(v)
-		}
-
-		//res, err := ff.Start(context.Background(), []customsource.CustomSource{cs})
-		//if err != nil {
-		//	logrus.Fatal(err)
-		//}
-		//
-		//logrus.Info(res)
 	},
 }
 
@@ -133,4 +135,3 @@ func initConfig() {
 		logrus.WithError(err).Fatal("[cdx] failed unmarshal config file")
 	}
 }
-

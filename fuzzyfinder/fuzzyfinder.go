@@ -2,12 +2,10 @@ package fuzzyfinder
 
 import (
 	"context"
+	"strings"
+
 	"github.com/b4b4r07/go-finder"
-	"github.com/b4b4r07/go-finder/source"
-	"github.com/sirupsen/logrus"
 	"github.com/xztaityozx/go-cdx/customsource"
-	"golang.org/x/xerrors"
-	"sync"
 )
 
 type (
@@ -17,57 +15,28 @@ type (
 	}
 )
 
-func (ff FuzzyFinder) Start(ctx context.Context, cs []customsource.CustomSource) ([]string, error) {
+// Run はFuzzyFinderを使ってパスを選択する
+// params:
+//  - ctx: context
+//  - sc: 入力のCustomSource
+// returns:
+//  - string: パス
+//  - error:
+func (ff FuzzyFinder) Run(ctx context.Context, sc customsource.SourceCollection) (string, error) {
 	f, err := finder.New(append([]string{ff.Path}, ff.Options...)...)
+
 	if err != nil {
-		return nil, xerrors.Errorf("failed build fuzzy finder: %w", err)
+		return "", err
 	}
 
-	listener := make(chan string, 10)
-
-	// start source commands
-	var wg sync.WaitGroup
-	for _, v := range cs {
-		wg.Add(1)
-		go func(v customsource.CustomSource) {
-			defer wg.Done()
-			res, err := v.Start()
-			if err != nil {
-				logrus.WithError(err).Errorf("failed CustomSource: %s", v.Name)
-				return
-			}
-
-			for _, s := range res {
-				if len(s) == 0 {
-					continue
-				}
-				listener <- s
-			}
-		}(v)
+	source, err := sc.Run(ctx)
+	if err != nil {
+		return "", err
+	}
+	res, err := f.Select(source)
+	if err != nil {
+		return "", err
 	}
 
-	var box []string
-	ch := make(chan struct{})
-	go func() {
-		for v := range listener {
-			box = append(box, v)
-		}
-		ch <- struct{}{}
-	}()
-
-	logrus.Info("waiting")
-
-	wg.Wait()
-	close(listener)
-
-	select {
-	case <-ctx.Done():
-		return nil, xerrors.New("canceled")
-	case <-ch:
-	}
-
-	f.Read(source.Slice(box))
-	items, err := f.Run()
-
-	return items, err
+	return strings.Join(res[0].([]string), " "), nil
 }

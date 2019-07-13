@@ -7,13 +7,12 @@ import (
 
 type (
 	Config struct {
-		File        File
-		Command     string
-		NoOutput    bool
-		Make        bool
-		FuzzyFinder fuzzyfinder.FuzzyFinder
+		File          File
+		Command       string
+		NoOutput      bool
+		Make          bool
+		FuzzyFinder   fuzzyfinder.FuzzyFinder
 		CustomSources []customsource.CustomSource
-		sep string
 	}
 
 	File struct {

@@ -1,12 +1,14 @@
 package customsource
 
 import (
+	"bufio"
 	"fmt"
-	"github.com/mattn/go-pipeline"
 	"os"
+	"os/exec"
 	"runtime"
 	"strings"
-	"text/tabwriter"
+
+	"github.com/b4b4r07/go-finder"
 )
 
 // CustomSource
@@ -14,48 +16,62 @@ type CustomSource struct {
 	// Name of CustomSource
 	Name string
 	// Alias for this CustomSource
-	Alias       rune
-	Commands    [][]string
+	Alias rune
+	// コマンド文字列
+	Command string
+	// cdに渡したいパスが始まるカラムの先頭列
+	BeginColum int
 }
 
 func (cs CustomSource) String() string {
-	var box []string
-	for _, v := range cs.Commands {
-		box = append(box, strings.Join(v, " "))
-	}
-	return fmt.Sprintf("%s\t%c\t%s",
+	return fmt.Sprintf("%s\t%c\t%d\t%s",
 		cs.Name,
 		cs.Alias,
-		strings.Join(box, "|"),
+		cs.BeginColum,
+		cs.Command,
 	)
 }
 
-func PrintCustomSource(cs []CustomSource) error {
-	w := tabwriter.NewWriter(os.Stderr, 0, 8, 0, '\t', 0)
-	_, err := fmt.Fprint(w, "Name\tAlias\tCommands")
+// run はCustomSourceに登録されたコマンドを実行して引数のoutに書き込む
+// params:
+//  - out: 書き込み先
+//  - newline: 改行文字列
+// returns:
+//  - error: コマンドの実行結果
+func (cs CustomSource) run(listener chan<- finder.Item, newline []byte) error {
+
+	var cmd *exec.Cmd
+	if runtime.GOOS == "windows" {
+		cmd = exec.Command("cmd", "/c", cs.Command)
+	} else {
+		cmd = exec.Command("sh", "-c", cs.Command)
+	}
+
+	cmd.Stdin = os.Stdin
+	stdout, err := cmd.StdoutPipe()
 	if err != nil {
 		return err
 	}
-	for _, v := range cs {
-		_, err := fmt.Fprint(w, v.String())
-		if err != nil {
-			return err
+
+	//err = cmd.Start()
+	//if err != nil {
+	//return err
+	//}
+
+	ch := make(chan struct{})
+	defer close(ch)
+	go func() {
+		scan := bufio.NewScanner(stdout)
+		for scan.Scan() {
+			text := scan.Text()
+			listener <- finder.Item{Key: fmt.Sprintf("[%s]\t%s", cs.Name, text), Value: strings.Fields(text)[cs.BeginColum:]}
 		}
-	}
-	return nil
-}
+		ch <- struct{}{}
+	}()
 
-// Start start commands
-func (cs CustomSource) Start() ([]string, error) {
-	out, err := pipeline.Output(cs.Commands...)
+	err = cmd.Run()
 
-	sep := "\n"
-	if runtime.GOOS == "windows" {
-		sep = "\r\n"
-	} else if runtime.GOOS == "darwin" {
-		sep = "\r"
-	}
-
-
-	return strings.Split(string(out), sep), err
+	// block
+	<-ch
+	return err
 }
