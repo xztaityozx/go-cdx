@@ -3,7 +3,6 @@ package environment
 import (
 	"os"
 	"runtime"
-
 )
 
 // Environment は環境依存を扱う
@@ -14,6 +13,8 @@ type Environment struct {
 	DefaultShell string
 	// dev null
 	DevNull string
+	// eval command
+	Eval string
 }
 
 // NewEnvironment はEnvironmentを作る
@@ -22,13 +23,13 @@ type Environment struct {
 func NewEnvironment() Environment {
 	shell := os.Getenv("SHELL")
 	if len(shell) == 0 {
-		shell="sh"
+		shell = "sh"
 	}
 	if runtime.GOOS == "windows" {
-		return Environment{NewLine:[]byte("\r\n"), DefaultShell:"powershell", DevNull:"$null"}
+		return Environment{NewLine: []byte("\r\n"), DefaultShell: "powershell", DevNull: "$null", Eval: "iex"}
 	} else if runtime.GOOS == "darwin" {
-		return Environment{NewLine:[]byte("\r"), DefaultShell:shell, DevNull:"/dev/null"}
+		return Environment{NewLine: []byte("\r"), DefaultShell: shell, DevNull: "/dev/null", Eval: "eval"}
 	} else {
-		return Environment{NewLine:[]byte("\n"), DefaultShell:shell, DevNull:"/dev/null"}
+		return Environment{NewLine: []byte("\n"), DefaultShell: shell, DevNull: "/dev/null", Eval: "eval"}
 	}
 }

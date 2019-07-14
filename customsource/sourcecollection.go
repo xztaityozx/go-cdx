@@ -3,16 +3,37 @@ package customsource
 import (
 	"context"
 	"fmt"
-	"github.com/xztaityozx/go-cdx/environment"
 	"os"
 	"sync"
 	"text/tabwriter"
+
+	"github.com/xztaityozx/go-cdx/environment"
 
 	"github.com/b4b4r07/go-finder"
 	"golang.org/x/xerrors"
 )
 
 type SourceCollection []CustomSource
+
+// TODO: Test
+// New はconfigで設定しているCustomSourceから、listの各文字がAliasと一致するもののリストを返す
+// params:
+//  - list: 一致させたいAliasのリスト
+//  - box: 設定されてるCustomSource
+// returns:
+//  - SourceCollection:
+func New(list string, box []CustomSource) SourceCollection {
+	m := map[rune]CustomSource{}
+	for _, v := range box {
+		m[v.Alias] = v
+	}
+
+	var rt SourceCollection
+	for _, v := range []rune(list) {
+		rt = append(rt, m[v])
+	}
+	return rt
+}
 
 // Print はCustomSourceを一覧表示する
 // returns:
@@ -40,7 +61,6 @@ func (sc SourceCollection) Print() error {
 //  - finder.Items:
 //  - error:
 func (sc SourceCollection) Run(ctx context.Context, env environment.Environment) (finder.Items, error) {
-
 
 	// finder.Itemを受け取るチャンネル
 	listener := make(chan finder.Item, 20)

@@ -2,10 +2,12 @@ package fuzzyfinder
 
 import (
 	"context"
-	"github.com/xztaityozx/go-cdx/environment"
 	"strings"
 
+	"github.com/xztaityozx/go-cdx/environment"
+
 	"github.com/b4b4r07/go-finder"
+	"github.com/b4b4r07/go-finder/source"
 	"github.com/xztaityozx/go-cdx/customsource"
 )
 
@@ -16,6 +18,22 @@ type (
 	}
 )
 
+// YesNo はyesとnoをFuzzyFinderで選択し、yesならtrue,noならfalseを返す
+// returns:
+//  - bool: res
+//  - error:
+func (ff FuzzyFinder) YesNo() (bool, error) {
+	f, err := finder.New(append([]string{ff.Path}, ff.Options...)...)
+	if err != nil {
+		return false, err
+	}
+
+	f.Read(source.Slice([]string{"yes", "no"}))
+	items, err := f.Run()
+
+	return items[0] == "yes", err
+}
+
 // Run はFuzzyFinderを使ってパスを選択する
 // params:
 //  - ctx: context
@@ -23,14 +41,14 @@ type (
 // returns:
 //  - string: パス
 //  - error:
-func (ff FuzzyFinder) Run(ctx context.Context, sc customsource.SourceCollection) (string, error) {
+func (ff FuzzyFinder) Run(ctx context.Context, sc customsource.SourceCollection, env environment.Environment) (string, error) {
 	f, err := finder.New(append([]string{ff.Path}, ff.Options...)...)
 
 	if err != nil {
 		return "", err
 	}
 
-	source, err := sc.Run(ctx, environment.NewEnvironment())
+	source, err := sc.Run(ctx, env)
 	if err != nil {
 		return "", err
 	}

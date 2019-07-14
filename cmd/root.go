@@ -21,15 +21,12 @@
 package cmd
 
 import (
-	"context"
 	"fmt"
 	"os"
 	"path/filepath"
 
 	"github.com/sirupsen/logrus"
 	"github.com/xztaityozx/go-cdx/config"
-	"github.com/xztaityozx/go-cdx/customsource"
-	"github.com/xztaityozx/go-cdx/fuzzyfinder"
 
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
@@ -45,41 +42,6 @@ var rootCmd = &cobra.Command{
 	Short: "",
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
-		//cs := customsource.CustomSource{
-		//	Commands:[][]string{
-		//		{"ls","-1","./"},
-		//	},
-		//	Name:"ls",
-		//	Alias:'l',
-		//}
-
-		sc := customsource.SourceCollection{
-			{
-				Name:    "ls-pwd",
-				Command: "ls -1 ./",
-			},
-			{
-				Name:    "ls-root",
-				Command: "ls -1 /",
-			},
-			{
-				Name:        "ghq-list",
-				Command:     "ghq list | xargs -n1 -I@ echo 'echo -e \"$(basename @) $(ghq root)/@\"'|bash|column -t",
-				BeginColumn: 1,
-			},
-		}
-
-		ff := fuzzyfinder.FuzzyFinder{
-			Path:    "fzf",
-			Options: []string{"-1", "-0"},
-		}
-
-		res, err := ff.Run(context.Background(), sc)
-		if err != nil {
-			logrus.Fatal(err)
-		}
-
-		logrus.Info(res)
 
 	},
 }
@@ -93,17 +55,18 @@ func Execute() {
 	}
 }
 
+// TODO: Implements flags
 func init() {
 	cobra.OnInitialize(initConfig)
 
-	// Here you will define your flags and configuration settings.
-	// Cobra supports persistent flags, which, if defined here,
-	// will be global for your application.
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.go-cdx.yaml)")
 
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// CustomSource
+	rootCmd.Flags().StringP("custom", "c", "", "CustomSourceからcdします")
+
+	// NoOutput
+	rootCmd.Flags().Bool("no-output", false, "STDOUTに何も出力しません")
+	viper.BindPFlag("NoOutput", rootCmd.Flags().Lookup("no-output"))
 }
 
 // initConfig reads in config file and ENV variables if set.
