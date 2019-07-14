@@ -63,9 +63,9 @@ var rootCmd = &cobra.Command{
 				Command: "ls -1 /",
 			},
 			{
-				Name:       "ghq-list",
-				Command:    "ghq list | xargs -n1 -I@ echo 'echo -e \"$(basename @) $(ghq root)/@\"'|bash|column -t",
-				BeginColum: 1,
+				Name:        "ghq-list",
+				Command:     "ghq list | xargs -n1 -I@ echo 'echo -e \"$(basename @) $(ghq root)/@\"'|bash|column -t",
+				BeginColumn: 1,
 			},
 		}
 

@@ -12,7 +12,7 @@ func TestCustomSource_String(t *testing.T) {
 		expect string
 		cs     CustomSource
 	}{
-		{expect: fmt.Sprintf("ten\tt\t10\techo 10"), cs: CustomSource{Name: "ten", Alias: 't', Command: "echo 10", BeginColum: 10}},
+		{expect: fmt.Sprintf("ten\tt\t10\techo 10"), cs: CustomSource{Name: "ten", Alias: 't', Command: "echo 10", BeginColumn: 10}},
 	}
 
 	for i, v := range data {

@@ -3,37 +3,13 @@ package customsource
 import (
 	"context"
 	"fmt"
+	"github.com/xztaityozx/go-cdx/environment"
 	"testing"
 
 	"github.com/b4b4r07/go-finder"
 	"github.com/stretchr/testify/assert"
 )
 
-func TestSourceCollection_FindBeginColumn(t *testing.T) {
-
-	data := []struct {
-		wants int
-		isErr bool
-		sc    SourceCollection
-		in    string
-	}{
-		{wants: 10, sc: SourceCollection{{Name: "ten", BeginColum: 10}, {Name: "nine", BeginColum: 9}}, in: "ten", isErr: false},
-		{wants: 9, sc: SourceCollection{{Name: "ten", BeginColum: 10}, {Name: "nine", BeginColum: 9}}, in: "nine", isErr: false},
-		{wants: -1, sc: SourceCollection{{Name: "ten", BeginColum: 10}, {Name: "nine", BeginColum: 9}}, in: "one", isErr: true},
-	}
-
-	for i, v := range data {
-		t.Run(fmt.Sprintf("test-%d", i), func(t *testing.T) {
-			res, err := v.sc.FindBeginColumn(v.in)
-			assert.Equal(t, v.wants, res)
-			if v.isErr {
-				assert.Error(t, err)
-			} else {
-				assert.NoError(t, err)
-			}
-		})
-	}
-}
 
 func TestSourceCollection_Run(t *testing.T) {
 	data := []struct {
@@ -54,7 +30,7 @@ func TestSourceCollection_Run(t *testing.T) {
 				{Key: "[seq-10]\t9", Value: []string{"9"}},
 				{Key: "[seq-10]\t10", Value: []string{"10"}},
 			},
-			sc:    SourceCollection{{Name: "seq-10", BeginColum: 0, Command: "seq 10"}},
+			sc:    SourceCollection{{Name: "seq-10", BeginColumn: 0, Command: "seq 10"}},
 			isErr: false,
 		},
 		{
@@ -65,7 +41,7 @@ func TestSourceCollection_Run(t *testing.T) {
 				{Key: "[seq-10|xargs-n2]\t7 8", Value: []string{"8"}},
 				{Key: "[seq-10|xargs-n2]\t9 10", Value: []string{"10"}},
 			},
-			sc:    SourceCollection{{Name: "seq-10|xargs-n2", BeginColum: 1, Command: "seq 10|xargs -n2"}},
+			sc:    SourceCollection{{Name: "seq-10|xargs-n2", BeginColumn: 1, Command: "seq 10|xargs -n2"}},
 			isErr: false,
 		},
 		{
@@ -87,13 +63,13 @@ func TestSourceCollection_Run(t *testing.T) {
 				{Key: "[seq-10|xargs-n2]\t9 10", Value: []string{"10"}},
 			},
 			sc: SourceCollection{
-				{Name: "seq-10", BeginColum: 0, Command: "seq 10"},
-				{Name: "seq-10|xargs-n2", BeginColum: 1, Command: "seq 10|xargs -n2"},
+				{Name: "seq-10", BeginColumn: 0, Command: "seq 10"},
+				{Name: "seq-10|xargs-n2", BeginColumn: 1, Command: "seq 10|xargs -n2"},
 			},
 			isErr: false,
 		},
 		{
-			sc:    SourceCollection{{Name: "err", Command: "exit 1", BeginColum: 0}},
+			sc:    SourceCollection{{Name: "err", Command: "exit 1", BeginColumn: 0}},
 			isErr: true,
 		},
 	}
@@ -101,7 +77,7 @@ func TestSourceCollection_Run(t *testing.T) {
 	for i, v := range data {
 		t.Run(fmt.Sprintf("test-%d", i), func(t *testing.T) {
 			as := assert.New(t)
-			actual, err := v.sc.Run(context.Background())
+			actual, err := v.sc.Run(context.Background(), environment.NewEnvironment())
 			if v.isErr {
 				as.Error(err)
 			} else {

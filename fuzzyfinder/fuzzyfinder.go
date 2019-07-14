@@ -2,6 +2,7 @@ package fuzzyfinder
 
 import (
 	"context"
+	"github.com/xztaityozx/go-cdx/environment"
 	"strings"
 
 	"github.com/b4b4r07/go-finder"
@@ -29,7 +30,7 @@ func (ff FuzzyFinder) Run(ctx context.Context, sc customsource.SourceCollection)
 		return "", err
 	}
 
-	source, err := sc.Run(ctx)
+	source, err := sc.Run(ctx, environment.NewEnvironment())
 	if err != nil {
 		return "", err
 	}

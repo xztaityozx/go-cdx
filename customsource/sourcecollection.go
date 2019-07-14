@@ -3,8 +3,8 @@ package customsource
 import (
 	"context"
 	"fmt"
+	"github.com/xztaityozx/go-cdx/environment"
 	"os"
-	"runtime"
 	"sync"
 	"text/tabwriter"
 
@@ -35,16 +35,12 @@ func (sc SourceCollection) Print() error {
 // Run はfinder.Selectに渡すItemsを作る
 // params:
 //  - ctx: context
+//  - env: Environment
 // returns:
 //  - finder.Items:
 //  - error:
-func (sc SourceCollection) Run(ctx context.Context) (finder.Items, error) {
-	newline := []byte("\n")
-	if runtime.GOOS == "window" {
-		newline = []byte("\r\n")
-	} else if runtime.GOOS == "darwin" {
-		newline = []byte("\r")
-	}
+func (sc SourceCollection) Run(ctx context.Context, env environment.Environment) (finder.Items, error) {
+
 
 	// finder.Itemを受け取るチャンネル
 	listener := make(chan finder.Item, 20)
@@ -59,7 +55,7 @@ func (sc SourceCollection) Run(ctx context.Context) (finder.Items, error) {
 	// CustomSourceを起動
 	for _, v := range sc {
 		go func(cs CustomSource) {
-			err := cs.run(listener, newline)
+			err := cs.run(listener, env)
 			if err != nil {
 				errCh <- err
 			}
@@ -89,21 +85,4 @@ func (sc SourceCollection) Run(ctx context.Context) (finder.Items, error) {
 		}
 	}
 
-}
-
-// FindBeginColumn はSourceCollectionの中から name と一致するCustomSourceのBeginColumnを返す
-// params:
-//  - name: 探したいCustomSourceの名前
-// returns:
-//  - int: BeginColum
-//  - error: 見つからなかったときにerror
-func (sc SourceCollection) FindBeginColumn(name string) (int, error) {
-	// 一度しか呼ばれないし線形探索でいいかｗ
-	for _, v := range sc {
-		if v.Name == name {
-			return v.BeginColum, nil
-		}
-	}
-
-	return -1, xerrors.Errorf("%s does not exists", name)
 }
