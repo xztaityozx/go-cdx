@@ -21,12 +21,19 @@
 package cmd
 
 import (
+	"context"
 	"fmt"
 	"os"
+	"os/signal"
 	"path/filepath"
+	"strings"
+	"syscall"
 
 	"github.com/sirupsen/logrus"
+	"github.com/xztaityozx/go-cdx/cd"
 	"github.com/xztaityozx/go-cdx/config"
+	"github.com/xztaityozx/go-cdx/customsource"
+	"github.com/xztaityozx/go-cdx/environment"
 
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
@@ -43,25 +50,88 @@ var rootCmd = &cobra.Command{
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
 
+		env := environment.NewEnvironment()
+
 		// init
 		if init, _ := cmd.Flags().GetBool("init"); init {
-
-			os.Exit(1)
+			PrintInit(env)
+			return
 		}
-
 		// version
 		if v, _ := cmd.Flags().GetBool("version"); v {
 			Version.Print()
 			os.Exit(1)
 		}
+		// add
+		if add, _ := cmd.Flags().GetBool("add"); add {
+			wd, _ := os.Getwd()
+			cfg.File.AppendBookmark(wd)
+			return
+		}
+		// popd
+		if popd, _ := cmd.Flags().GetBool("popd"); popd {
+			fmt.Print("popd")
+			return
+		}
 
+		// AddHistorys
 		custom, _ := cmd.Flags().GetString("custom")
 		if h, _ := cmd.Flags().GetBool("history"); h {
 			custom += "h"
+			cfg.CustomSources = append(cfg.CustomSources,
+				customsource.CustomSource{
+					Name:        "history",
+					SubName:     "h",
+					Command:     "/bin/cat " + cfg.File.History,
+					BeginColumn: 0,
+				})
 		}
 		if b, _ := cmd.Flags().GetBool("bookmark"); b {
 			custom += "b"
+			cfg.CustomSources = append(cfg.CustomSources,
+				customsource.CustomSource{
+					Name:        "bookmark",
+					SubName:     "b",
+					Command:     "/bin/cat " + cfg.File.BookMark,
+					BeginColumn: 0,
+				})
 		}
+
+		// ここからFuzzyFinderを使う
+
+		ctx, cancel := context.WithCancel(context.Background())
+		defer cancel()
+
+		ch := make(chan os.Signal)
+		signal.Notify(ch, syscall.SIGINT, syscall.SIGSTOP)
+		defer close(ch)
+		go func() {
+			<-ch
+			cancel()
+		}()
+		var path string
+		if len(custom) == 0 {
+			// 引数のパスを使う
+			path, _ = homedir.Expand(strings.Join(args, " "))
+		} else {
+
+			logrus.Info(cfg.CustomSources[0])
+
+			// CustomSourceを使う
+			source, err := customsource.New(custom, cfg.CustomSources)
+			if err != nil {
+				logrus.WithError(err).Error("failed search CustomSource")
+				return
+			}
+
+			path, err = cfg.FuzzyFinder.Run(ctx, source, env)
+			if err != nil {
+				logrus.Error(err)
+			}
+		}
+
+		command := cd.New(cfg.Command, path, cfg.NoOutput, cfg.Make, cfg.FuzzyFinder)
+		fmt.Print(command.BuildCommand(ctx, env))
 
 	},
 }
@@ -78,7 +148,14 @@ func Execute() {
 func init() {
 	cobra.OnInitialize(initConfig)
 
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.config/go-cdx.yaml)")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.config/go-cdx/go-cdx.yml)")
+
+	rootCmd.Flags().Bool("help", false, "help")
+
+	rootCmd.SetHelpFunc(func(cmd *cobra.Command, args []string) {
+		cmd.Usage()
+		os.Exit(1)
+	})
 
 	// CustomSource
 	rootCmd.Flags().StringP("custom", "c", "", "CustomSourceからcdします")

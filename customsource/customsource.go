@@ -3,10 +3,11 @@ package customsource
 import (
 	"bufio"
 	"fmt"
-	"github.com/xztaityozx/go-cdx/environment"
 	"os"
 	"os/exec"
 	"strings"
+
+	"github.com/xztaityozx/go-cdx/environment"
 
 	"github.com/b4b4r07/go-finder"
 )
@@ -14,19 +15,23 @@ import (
 // CustomSource
 type CustomSource struct {
 	// Name of CustomSource
-	Name string
+	Name string `yaml:"name"`
 	// Alias for this CustomSource
-	Alias rune
+	SubName string `yaml:"alias"`
 	// コマンド文字列
-	Command string
+	Command string `yaml:"command"`
 	// cdに渡したいパスが始まるカラムの先頭列
-	BeginColumn int
+	BeginColumn int `yaml:"begin"`
+}
+
+func (cs CustomSource) Alias() rune {
+	return rune(cs.SubName[0])
 }
 
 func (cs CustomSource) String() string {
 	return fmt.Sprintf("%s\t%c\t%d\t%s",
 		cs.Name,
-		cs.Alias,
+		cs.Alias(),
 		cs.BeginColumn,
 		cs.Command,
 	)

@@ -24,7 +24,7 @@ type SourceCollection []CustomSource
 func New(list string, box []CustomSource) (SourceCollection, error) {
 	m := map[rune]CustomSource{}
 	for _, v := range box {
-		m[v.Alias] = v
+		m[v.Alias()] = v
 	}
 
 	var rt SourceCollection
@@ -33,7 +33,7 @@ func New(list string, box []CustomSource) (SourceCollection, error) {
 		if ok {
 			rt = append(rt, t)
 		} else {
-			return nil, xerrors.Errorf("%s not found", v)
+			return nil, xerrors.Errorf("%c not found", v)
 		}
 	}
 	return rt, nil

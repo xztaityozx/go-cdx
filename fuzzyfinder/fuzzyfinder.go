@@ -13,8 +13,8 @@ import (
 
 type (
 	FuzzyFinder struct {
-		Path    string
-		Options []string
+		Path    string   `yaml:"path"`
+		Options []string `yaml:"options"`
 	}
 )
 

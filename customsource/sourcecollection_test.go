@@ -13,11 +13,11 @@ import (
 
 func TestNew(t *testing.T) {
 	source := []CustomSource{
-		{Name: "A", Alias: 'A'},
-		{Name: "K", Alias: 'K'},
-		{Name: "B", Alias: 'B'},
-		{Name: "C", Alias: 'C'},
-		{Name: "L", Alias: 'L'},
+		{Name: "A", SubName: "A"},
+		{Name: "K", SubName: "K"},
+		{Name: "B", SubName: "B"},
+		{Name: "C", SubName: "C"},
+		{Name: "L", SubName: "L"},
 	}
 
 	data := []struct {

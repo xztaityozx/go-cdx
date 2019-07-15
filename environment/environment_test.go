@@ -11,7 +11,7 @@ import (
 func TestEnvironment_New(t *testing.T) {
 	var expect Environment
 	if runtime.GOOS == "windows" {
-		expect = Environment{[]byte("\r\n"), "powershell", "$null", "iex"}
+		expect = Environment{[]byte("\r\n"), "powershell", "$null"}
 	} else {
 		shell := os.Getenv("SHELL")
 		if len(shell) == 0 {
@@ -19,9 +19,9 @@ func TestEnvironment_New(t *testing.T) {
 		}
 
 		if runtime.GOOS == "darwin" {
-			expect = Environment{[]byte("\r"), shell, "/dev/null", "eval"}
+			expect = Environment{[]byte("\r"), shell, "/dev/null"}
 		} else {
-			expect = Environment{[]byte("\n"), shell, "/dev/null", "eval"}
+			expect = Environment{[]byte("\n"), shell, "/dev/null"}
 		}
 	}
 

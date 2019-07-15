@@ -11,12 +11,12 @@ import (
 
 type (
 	Config struct {
-		File          File                        `yaml:"file"`
-		Command       string                      `yaml:"command"`
-		NoOutput      bool                        `yaml:"noOutput"`
-		Make          bool                        `yaml:"make"`
-		FuzzyFinder   fuzzyfinder.FuzzyFinder     `yaml:"fuzzyfinder"`
-		CustomSources []customsource.CustomSource `yaml:"source"`
+		File          File                    `yaml:"file"`
+		Command       string                  `yaml:"command"`
+		NoOutput      bool                    `yaml:"noOutput"`
+		Make          bool                    `yaml:"make"`
+		FuzzyFinder   fuzzyfinder.FuzzyFinder `yaml:"fuzzyfinder"`
+		CustomSources customsource.SourceCollection
 	}
 
 	File struct {
