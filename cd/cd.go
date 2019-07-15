@@ -70,7 +70,7 @@ func (c Cd) BuildCommand(ctx context.Context, env environment.Environment) strin
 		suffix = fmt.Sprint(" > ", env.DevNull)
 	}
 
-	return fmt.Sprintf(`%s "%s"%s`, env.Eval, func() string {
+	return fmt.Sprintf(`%s%s`, func() string {
 		if err := c.tryMakeDir(); err != nil {
 			return `exit 1`
 		}

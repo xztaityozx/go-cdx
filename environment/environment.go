@@ -13,8 +13,6 @@ type Environment struct {
 	DefaultShell string
 	// dev null
 	DevNull string
-	// eval command
-	Eval string
 }
 
 // NewEnvironment はEnvironmentを作る
@@ -26,10 +24,10 @@ func NewEnvironment() Environment {
 		shell = "sh"
 	}
 	if runtime.GOOS == "windows" {
-		return Environment{NewLine: []byte("\r\n"), DefaultShell: "powershell", DevNull: "$null", Eval: "iex"}
+		return Environment{NewLine: []byte("\r\n"), DefaultShell: "powershell", DevNull: "$null"}
 	} else if runtime.GOOS == "darwin" {
-		return Environment{NewLine: []byte("\r"), DefaultShell: shell, DevNull: "/dev/null", Eval: "eval"}
+		return Environment{NewLine: []byte("\r"), DefaultShell: shell, DevNull: "/dev/null"}
 	} else {
-		return Environment{NewLine: []byte("\n"), DefaultShell: shell, DevNull: "/dev/null", Eval: "eval"}
+		return Environment{NewLine: []byte("\n"), DefaultShell: shell, DevNull: "/dev/null"}
 	}
 }

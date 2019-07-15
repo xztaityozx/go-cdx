@@ -15,14 +15,13 @@ import (
 
 type SourceCollection []CustomSource
 
-// TODO: Test
 // New はconfigで設定しているCustomSourceから、listの各文字がAliasと一致するもののリストを返す
 // params:
 //  - list: 一致させたいAliasのリスト
 //  - box: 設定されてるCustomSource
 // returns:
 //  - SourceCollection:
-func New(list string, box []CustomSource) SourceCollection {
+func New(list string, box []CustomSource) (SourceCollection, error) {
 	m := map[rune]CustomSource{}
 	for _, v := range box {
 		m[v.Alias] = v
@@ -30,9 +29,14 @@ func New(list string, box []CustomSource) SourceCollection {
 
 	var rt SourceCollection
 	for _, v := range []rune(list) {
-		rt = append(rt, m[v])
+		t, ok := m[v]
+		if ok {
+			rt = append(rt, t)
+		} else {
+			return nil, xerrors.Errorf("%s not found", v)
+		}
 	}
-	return rt
+	return rt, nil
 }
 
 // Print はCustomSourceを一覧表示する

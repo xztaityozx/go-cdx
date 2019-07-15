@@ -3,13 +3,48 @@ package customsource
 import (
 	"context"
 	"fmt"
-	"github.com/xztaityozx/go-cdx/environment"
 	"testing"
+
+	"github.com/xztaityozx/go-cdx/environment"
 
 	"github.com/b4b4r07/go-finder"
 	"github.com/stretchr/testify/assert"
 )
 
+func TestNew(t *testing.T) {
+	source := []CustomSource{
+		{Name: "A", Alias: 'A'},
+		{Name: "K", Alias: 'K'},
+		{Name: "B", Alias: 'B'},
+		{Name: "C", Alias: 'C'},
+		{Name: "L", Alias: 'L'},
+	}
+
+	data := []struct {
+		expect []string
+		in     string
+		isErr  bool
+	}{
+		{expect: []string{"A", "B", "C"}, in: "ABC", isErr: false},
+		{expect: []string{"K"}, in: "K", isErr: false},
+		{expect: []string{}, in: "X", isErr: true},
+	}
+
+	for _, v := range data {
+		var actual []string
+		res, err := New(v.in, source)
+		for _, k := range res {
+			actual = append(actual, k.Name)
+		}
+
+		if v.isErr {
+			assert.Error(t, err)
+		} else {
+			assert.ElementsMatch(t, v.expect, actual)
+		}
+
+	}
+}
 
 func TestSourceCollection_Run(t *testing.T) {
 	data := []struct {

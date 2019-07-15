@@ -43,6 +43,26 @@ var rootCmd = &cobra.Command{
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
 
+		// init
+		if init, _ := cmd.Flags().GetBool("init"); init {
+
+			os.Exit(1)
+		}
+
+		// version
+		if v, _ := cmd.Flags().GetBool("version"); v {
+			Version.Print()
+			os.Exit(1)
+		}
+
+		custom, _ := cmd.Flags().GetString("custom")
+		if h, _ := cmd.Flags().GetBool("history"); h {
+			custom += "h"
+		}
+		if b, _ := cmd.Flags().GetBool("bookmark"); b {
+			custom += "b"
+		}
+
 	},
 }
 
@@ -55,11 +75,10 @@ func Execute() {
 	}
 }
 
-// TODO: Implements flags
 func init() {
 	cobra.OnInitialize(initConfig)
 
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.go-cdx.yaml)")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.config/go-cdx.yaml)")
 
 	// CustomSource
 	rootCmd.Flags().StringP("custom", "c", "", "CustomSourceからcdします")
@@ -67,6 +86,28 @@ func init() {
 	// NoOutput
 	rootCmd.Flags().Bool("no-output", false, "STDOUTに何も出力しません")
 	viper.BindPFlag("NoOutput", rootCmd.Flags().Lookup("no-output"))
+
+	// history
+	rootCmd.Flags().BoolP("history", "h", false, "履歴からcdします")
+	// bookmark
+	rootCmd.Flags().BoolP("bookmark", "b", false, "ブックマークからcdします")
+
+	// popd
+	rootCmd.Flags().BoolP("popd", "p", false, "popdします")
+
+	// add bookmark
+	rootCmd.Flags().Bool("add", false, "bookmarkにカレントディレクトリを追加します")
+
+	// init
+	rootCmd.Flags().Bool("init", false, "evalすることでcdxを使えるようにするコマンド列を出力します")
+
+	// version
+	rootCmd.Flags().BoolP("version", "v", false, "versionを出力して終了します")
+
+	// make
+	rootCmd.Flags().Bool("make", false, "ディレクトリが無い場合、作ってから移動します")
+	viper.BindPFlag("make", rootCmd.Flags().Lookup("make"))
+
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -84,7 +125,7 @@ func initConfig() {
 
 		// Search config in home directory with name ".go-cdx" (without extension).
 		viper.AddConfigPath(filepath.Join(home, ".config", "go-cdx"))
-		viper.SetConfigName(".go-cdx")
+		viper.SetConfigName("go-cdx")
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match

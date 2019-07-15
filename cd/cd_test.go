@@ -59,26 +59,24 @@ func TestCd_BuildCommand(t *testing.T) {
 		env    environment.Environment
 		source Cd
 	}{
-		{expect: fmt.Sprintf(`eval "cd '%s'"`, home), env: environment.Environment{Eval: "eval"}, source: Cd{"cd", home, false, false, fuzzyfinder.FuzzyFinder{}}},
-		{expect: fmt.Sprintf(`eval "cd '%s'" > /dev/null`, home), env: environment.Environment{Eval: "eval", DevNull: "/dev/null"}, source: Cd{"cd", home, true, false, fuzzyfinder.FuzzyFinder{}}},
-		{expect: fmt.Sprintf(`iex "cd '%s'"`, home), env: environment.Environment{Eval: "iex"}, source: Cd{"cd", home, false, false, fuzzyfinder.FuzzyFinder{}}},
-		{expect: fmt.Sprintf(`iex "cd '%s'" > $null`, home), env: environment.Environment{Eval: "iex", DevNull: "$null"}, source: Cd{"cd", home, true, false, fuzzyfinder.FuzzyFinder{}}},
-		{expect: fmt.Sprintf(`eval "pushd '%s'"`, home), env: environment.Environment{Eval: "eval"}, source: Cd{"pushd", home, false, false, fuzzyfinder.FuzzyFinder{}}},
-		{expect: fmt.Sprintf(`eval "pushd '%s'" > /dev/null`, home), env: environment.Environment{Eval: "eval", DevNull: "/dev/null"}, source: Cd{"pushd", home, true, false, fuzzyfinder.FuzzyFinder{}}},
-		{expect: fmt.Sprintf(`iex "pushd '%s'"`, home), env: environment.Environment{Eval: "iex"}, source: Cd{"pushd", home, false, false, fuzzyfinder.FuzzyFinder{}}},
-		{expect: fmt.Sprintf(`iex "pushd '%s'" > $null`, home), env: environment.Environment{Eval: "iex", DevNull: "$null"}, source: Cd{"pushd", home, true, false, fuzzyfinder.FuzzyFinder{}}},
-		{expect: fmt.Sprintf(`eval "cd '%s'"`, home), env: environment.Environment{Eval: "eval"}, source: Cd{"cd", home, false, false, fuzzyfinder.FuzzyFinder{Path: "head", Options: []string{"-n1"}}}},
-		{expect: fmt.Sprintf(`eval "cd '%s'" > /dev/null`, home), env: environment.Environment{Eval: "eval", DevNull: "/dev/null"}, source: Cd{"cd", home, true, false, fuzzyfinder.FuzzyFinder{Path: "head", Options: []string{"-n1"}}}},
-		{expect: fmt.Sprintf(`iex "cd '%s'"`, home), env: environment.Environment{Eval: "iex"}, source: Cd{"cd", home, false, false, fuzzyfinder.FuzzyFinder{Path: "head", Options: []string{"-n1"}}}},
-		{expect: fmt.Sprintf(`iex "cd '%s'" > $null`, home), env: environment.Environment{Eval: "iex", DevNull: "$null"}, source: Cd{"cd", home, true, false, fuzzyfinder.FuzzyFinder{Path: "head", Options: []string{"-n1"}}}},
-		{expect: fmt.Sprintf(`eval "pushd '%s'"`, home), env: environment.Environment{Eval: "eval"}, source: Cd{"pushd", home, false, false, fuzzyfinder.FuzzyFinder{Path: "head", Options: []string{"-n1"}}}},
-		{expect: fmt.Sprintf(`eval "pushd '%s'" > /dev/null`, home), env: environment.Environment{Eval: "eval", DevNull: "/dev/null"}, source: Cd{"pushd", home, true, false, fuzzyfinder.FuzzyFinder{Path: "head", Options: []string{"-n1"}}}},
-		{expect: fmt.Sprintf(`iex "pushd '%s'"`, home), env: environment.Environment{Eval: "iex"}, source: Cd{"pushd", home, false, false, fuzzyfinder.FuzzyFinder{Path: "head", Options: []string{"-n1"}}}},
-		{expect: fmt.Sprintf(`iex "pushd '%s'" > $null`, home), env: environment.Environment{Eval: "iex", DevNull: "$null"}, source: Cd{"pushd", home, true, false, fuzzyfinder.FuzzyFinder{Path: "head", Options: []string{"-n1"}}}},
+		{expect: fmt.Sprintf(`cd '%s'`, home), env: environment.Environment{}, source: Cd{"cd", home, false, false, fuzzyfinder.FuzzyFinder{}}},
+		{expect: fmt.Sprintf(`cd '%s' > /dev/null`, home), env: environment.Environment{DevNull: "/dev/null"}, source: Cd{"cd", home, true, false, fuzzyfinder.FuzzyFinder{}}},
+		{expect: fmt.Sprintf(`cd '%s' > $null`, home), env: environment.Environment{DevNull: "$null"}, source: Cd{"cd", home, true, false, fuzzyfinder.FuzzyFinder{}}},
+		{expect: fmt.Sprintf(`pushd '%s'`, home), env: environment.Environment{}, source: Cd{"pushd", home, false, false, fuzzyfinder.FuzzyFinder{}}},
+		{expect: fmt.Sprintf(`pushd '%s' > /dev/null`, home), env: environment.Environment{DevNull: "/dev/null"}, source: Cd{"pushd", home, true, false, fuzzyfinder.FuzzyFinder{}}},
+		{expect: fmt.Sprintf(`pushd '%s' > $null`, home), env: environment.Environment{DevNull: "$null"}, source: Cd{"pushd", home, true, false, fuzzyfinder.FuzzyFinder{}}},
+		{expect: fmt.Sprintf(`cd '%s'`, home), env: environment.Environment{}, source: Cd{"cd", home, false, false, fuzzyfinder.FuzzyFinder{Path: "head", Options: []string{"-n1"}}}},
+		{expect: fmt.Sprintf(`cd '%s' > /dev/null`, home), env: environment.Environment{DevNull: "/dev/null"}, source: Cd{"cd", home, true, false, fuzzyfinder.FuzzyFinder{Path: "head", Options: []string{"-n1"}}}},
+		{expect: fmt.Sprintf(`cd '%s'`, home), env: environment.Environment{}, source: Cd{"cd", home, false, false, fuzzyfinder.FuzzyFinder{Path: "head", Options: []string{"-n1"}}}},
+		{expect: fmt.Sprintf(`cd '%s' > $null`, home), env: environment.Environment{DevNull: "$null"}, source: Cd{"cd", home, true, false, fuzzyfinder.FuzzyFinder{Path: "head", Options: []string{"-n1"}}}},
+		{expect: fmt.Sprintf(`pushd '%s'`, home), env: environment.Environment{}, source: Cd{"pushd", home, false, false, fuzzyfinder.FuzzyFinder{Path: "head", Options: []string{"-n1"}}}},
+		{expect: fmt.Sprintf(`pushd '%s' > /dev/null`, home), env: environment.Environment{DevNull: "/dev/null"}, source: Cd{"pushd", home, true, false, fuzzyfinder.FuzzyFinder{Path: "head", Options: []string{"-n1"}}}},
+		{expect: fmt.Sprintf(`pushd '%s'`, home), env: environment.Environment{}, source: Cd{"pushd", home, false, false, fuzzyfinder.FuzzyFinder{Path: "head", Options: []string{"-n1"}}}},
+		{expect: fmt.Sprintf(`pushd '%s' > $null`, home), env: environment.Environment{DevNull: "$null"}, source: Cd{"pushd", home, true, false, fuzzyfinder.FuzzyFinder{Path: "head", Options: []string{"-n1"}}}},
 
 		{
-			expect: `eval "exit 1"`,
-			env:    environment.Environment{Eval: "eval"},
+			expect: `exit 1`,
+			env:    environment.Environment{},
 			source: Cd{
 				"cd",
 				filepath.Join(home, "test", sha),
@@ -88,8 +86,8 @@ func TestCd_BuildCommand(t *testing.T) {
 			},
 		},
 		{
-			expect: fmt.Sprintf(`eval "cd '%s'"`, filepath.Join(home, "test", sha)),
-			env:    environment.Environment{Eval: "eval"},
+			expect: fmt.Sprintf(`cd '%s'`, filepath.Join(home, "test", sha)),
+			env:    environment.Environment{},
 			source: Cd{
 				"cd",
 				filepath.Join(home, "test", sha),
@@ -99,8 +97,8 @@ func TestCd_BuildCommand(t *testing.T) {
 			},
 		},
 		{
-			expect: `iex "exit 1"`,
-			env:    environment.Environment{Eval: "iex"},
+			expect: `exit 1`,
+			env:    environment.Environment{},
 			source: Cd{
 				"cd",
 				filepath.Join(home, "test", sha),
@@ -110,8 +108,8 @@ func TestCd_BuildCommand(t *testing.T) {
 			},
 		},
 		{
-			expect: fmt.Sprintf(`iex "cd '%s'"`, filepath.Join(home, "test", sha)),
-			env:    environment.Environment{Eval: "iex"},
+			expect: fmt.Sprintf(`cd '%s'`, filepath.Join(home, "test", sha)),
+			env:    environment.Environment{},
 			source: Cd{
 				"cd",
 				filepath.Join(home, "test", sha),
@@ -121,8 +119,8 @@ func TestCd_BuildCommand(t *testing.T) {
 			},
 		},
 		{
-			expect: `eval "exit 1" > /dev/null`,
-			env:    environment.Environment{Eval: "eval", DevNull: "/dev/null"},
+			expect: `exit 1 > /dev/null`,
+			env:    environment.Environment{DevNull: "/dev/null"},
 			source: Cd{
 				"cd",
 				filepath.Join(home, "test", sha),
@@ -132,8 +130,8 @@ func TestCd_BuildCommand(t *testing.T) {
 			},
 		},
 		{
-			expect: `iex "exit 1" > $null`,
-			env:    environment.Environment{Eval: "iex", DevNull: "$null"},
+			expect: `exit 1 > $null`,
+			env:    environment.Environment{DevNull: "$null"},
 			source: Cd{
 				"cd",
 				filepath.Join(home, "test", sha),
