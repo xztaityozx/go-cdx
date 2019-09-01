@@ -22,7 +22,7 @@ type CdxVersion struct {
 var Version = CdxVersion{
 	Major:  2,
 	Minor:  1,
-	Build:  2,
+	Build:  3,
 	Status: dev,
 	Day:    "2019/09/01",
 }

@@ -1,4 +1,4 @@
-package cdxsource
+package config
 
 import (
 	"github.com/stretchr/testify/assert"
@@ -7,25 +7,25 @@ import (
 
 func TestNewCollection(t *testing.T) {
 	cfg := Collection{
-		Source{Alias:'a', Command:"command"},
+		CdxSource{Alias: "a",Command:"command"},
 	}
 
 	t.Run("ok", func(t *testing.T) {
 		data := []struct{
 			req string
-			exp []rune
+			exp []string
 		} {
-			{req: "a", exp:[]rune{'a'}},
-			{req:"h", exp:[]rune{'h'}},
-			{req:"b", exp:[]rune{'b'}},
-			{req:"ah", exp:[]rune{'a', 'h'}},
-			{req:"ahb", exp:[]rune{'a','h', 'b'}},
+			{req: "a", exp:[]string{"a"}},
+			{req:"h", exp:[]string{"h"}},
+			{req:"b", exp:[]string{"b"}},
+			{req:"ah", exp:[]string{"a", "h"}},
+			{req:"ahb", exp:[]string{"a","h", "b"}},
 		}
 
 		for _, v := range data {
 			e, err := NewCollection("","",cfg, v.req)
 			assert.NoError(t, err)
-			var box []rune
+			var box []string
 			for _, v := range e {
 				box = append(box, v.Alias)
 			}

@@ -108,12 +108,14 @@ var rootCmd = &cobra.Command{
 			cancel()
 		}()
 
-		for _, v := range can {
-			logrus.Info(v)
+		// output command string
+		command, err := cd.New(cfg, can).Build(ctx, cs)
+		if err != nil {
+			logrus.WithError(err).Fatal(err)
+			fmt.Println(config.ExitCommand())
 		}
 
-		// output command string
-		fmt.Println(cd.New(cfg, can).Build(ctx))
+		fmt.Println(command)
 	},
 }
 

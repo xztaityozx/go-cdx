@@ -6,8 +6,8 @@ import (
 )
 
 type FuzzyFinder struct {
-	Command string
-	Options []string
+	Command string  `yaml:"command"`
+	Options []string `yaml:"options"`
 }
 
 // YesNo はyesとnoをFuzzyFinderで選択し、yesならtrue,noならfalseを返す

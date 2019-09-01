@@ -1,10 +1,9 @@
-package cdxsource
+package config
 
 import (
 	"bufio"
 	"fmt"
 	"github.com/pkg/errors"
-	"github.com/xztaityozx/go-cdx/config"
 	"strings"
 	"sync"
 
@@ -14,20 +13,20 @@ import (
 )
 
 type (
-	Source struct {
+	CdxSource struct {
 		Name       string `yaml:"name"`
-		Alias      rune   `yaml:"alias"`
+		Alias      string `yaml:"alias"`
 		Command    string `yaml:"command"`
-		SkipColumn int    `yaml:"skip"`
+		SkipColumn int  `yaml:"skipColumn"`
 	}
 
-	Collection []Source
+	Collection []CdxSource
 )
 
-func (s Source) run(ctx context.Context, listener chan<- finder.Item) error {
+func (s CdxSource) run(ctx context.Context, listener chan<- finder.Item) error {
 	ch := make(chan error)
 	go func() {
-		cmd := exec.Command(config.DefaultShell(), "-c", s.Command)
+		cmd := exec.Command(DefaultShell(), "-c", s.Command)
 		stdout, err := cmd.StdoutPipe()
 		if err != nil {
 			ch <- err
@@ -71,9 +70,9 @@ func (s Source) run(ctx context.Context, listener chan<- finder.Item) error {
 //  - err: error
 func NewCollection(b, h string, cfg Collection, req string) (c Collection, err error) {
 
-	m := map[rune]Source{
-		'h': {Name: "history", Alias: 'h', SkipColumn: 1, Command: fmt.Sprintf("cat %s", h)},
-		'b': {Name: "bookmark", Alias: 'b', SkipColumn: 1, Command: fmt.Sprintf("cat %s", b)},
+	m := map[string]CdxSource{
+		"h": {Name: "history", Alias: "h", SkipColumn: 1, Command: fmt.Sprintf("cat %s", h)},
+		"b": {Name: "bookmark", Alias: "b", SkipColumn: 1, Command: fmt.Sprintf("cat %s", b)},
 	}
 
 	for _, v := range cfg {
@@ -82,7 +81,7 @@ func NewCollection(b, h string, cfg Collection, req string) (c Collection, err e
 
 	c = Collection{}
 	for _, v := range req {
-		if s, ok := m[v]; ok {
+		if s, ok := m[string(v)]; ok {
 			c=append(c, s)
 		} else {
 			return nil, errors.Errorf("cannot find cdxsource: %s", s.Alias)
@@ -109,9 +108,9 @@ func (c Collection) generateFinderItem(ctx context.Context, fromCli []string) (i
 	var wg sync.WaitGroup
 	wg.Add(len(c))
 
-	// start cdxsource commands
+	// start source commands
 	for _, v := range c {
-		go func(s Source) {
+		go func(s CdxSource) {
 			if err := s.run(ctx, listener); err != nil {
 				ch <- err
 			}
@@ -126,7 +125,7 @@ func (c Collection) generateFinderItem(ctx context.Context, fromCli []string) (i
 
 	items = finder.Items{}
 	for _, v := range fromCli {
-		items.Add(v,v)
+		items.Add(v,[]string{v})
 	}
 
 	for {
@@ -150,7 +149,7 @@ func (c Collection) generateFinderItem(ctx context.Context, fromCli []string) (i
 // returns:
 //  - path: destination path
 //  - err: error
-func (c Collection) Select(ctx context.Context, ff config.FuzzyFinder, paths []string) (path string, err error) {
+func (c Collection) Select(ctx context.Context, ff FuzzyFinder, paths []string) (path string, err error) {
 	f, err := finder.New(append([]string{ff.Command}, ff.Options...)...)
 	if err != nil {
 		return

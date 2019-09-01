@@ -1,18 +1,17 @@
 package config
 
 import (
-	"github.com/xztaityozx/go-cdx/source"
 	"runtime"
 )
 
 type (
 	Config struct {
-		Make         bool
-		NoOutput     bool
-		Source       []source.Source
-		HistoryFile  string
-		BookmarkFile string
-		FuzzyFinder
+		Make         bool			`yaml:"make"`
+		NoOutput     bool			`yaml:"noOutput"`
+		Source       []CdxSource	`yaml:"source"`
+		HistoryFile  string			`yaml:"history"`
+		BookmarkFile string			`yaml:"bookmark"`
+		FuzzyFinder  FuzzyFinder	`yaml:"fuzzyfinder"`
 	}
 )
 
@@ -40,4 +39,17 @@ func DefaultShell() string {
 		}
 	}
 	return shell
+}
+
+var exitCommand = ""
+
+func ExitCommand() string {
+	if len(exitCommand)	== 0 {
+		if runtime.GOOS == "windows" {
+			exitCommand = "throw '[cdx] failed'"
+		} else {
+			exitCommand = "return 1"
+		}
+	}
+	return exitCommand
 }

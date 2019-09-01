@@ -3,7 +3,6 @@ package cd
 import (
 	"github.com/stretchr/testify/assert"
 	"github.com/xztaityozx/go-cdx/config"
-	"github.com/xztaityozx/go-cdx/source"
 	"testing"
 )
 
@@ -14,7 +13,7 @@ func TestNew(t *testing.T) {
 			HistoryFile:"history",
 			Make:false,
 			NoOutput:true,
-			Source:[]source.Source{},
+			Source:[]config.CdxSource{},
 			FuzzyFinder: config.FuzzyFinder{Command:"fzf", Options:[]string{}},
 		},
 		candidate: []string{"/candidate/to/candidate"},
