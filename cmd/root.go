@@ -71,10 +71,6 @@ var rootCmd = &cobra.Command{
 				fmt.Print(command)
 				return nil
 			}},
-			{name: "init", action:func() error {
-				PrintInit()
-				return nil
-			}},
 		} {
 			if f, _ := cmd.Flags().GetBool(v.name); f {
 				 if err := v.action(); err != nil {
@@ -84,7 +80,7 @@ var rootCmd = &cobra.Command{
 			}
 		}
 
-		cs, _ := cmd.Flags().GetString("source")
+		cs, _ := cmd.Flags().GetString("cdxsource")
 		if f, _ := cmd.Flags().GetBool("history"); f {
 			cs+="h"
 		}
@@ -139,7 +135,7 @@ func init() {
 		os.Exit(1)
 	})
 	// CustomSource
-	rootCmd.Flags().StringP("source", "c", "", "CustomSourceからcdします")
+	rootCmd.Flags().StringP("cdxsource", "c", "", "CustomSourceからcdします")
 	// NoOutput
 	rootCmd.Flags().Bool("no-output", false, "STDOUTに何も出力しません")
 	viper.BindPFlag("NoOutput", rootCmd.Flags().Lookup("no-output"))
@@ -151,8 +147,6 @@ func init() {
 	rootCmd.Flags().BoolP("popd", "p", false, "popdします")
 	// add bookmark
 	rootCmd.Flags().Bool("add", false, "bookmarkにカレントディレクトリを追加します")
-	// init
-	rootCmd.Flags().Bool("init", false, "evalすることでcdxを使えるようにするコマンド列を出力します")
 	// version
 	rootCmd.Flags().BoolP("version", "v", false, "versionを出力して終了します")
 	// make

@@ -17,9 +17,9 @@ func TestNew(t *testing.T) {
 			Source:[]source.Source{},
 			FuzzyFinder: config.FuzzyFinder{Command:"fzf", Options:[]string{}},
 		},
-		dst: []string{"/dst/to/dst"},
+		candidate: []string{"/candidate/to/candidate"},
 	}
-	actual := New(expect.cfg, []string{"/dst/to/dst"})
+	actual := New(expect.cfg, []string{"/candidate/to/candidate"})
 
 	assert.Equal(t, expect, actual)
 }

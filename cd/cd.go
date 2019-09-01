@@ -3,19 +3,20 @@ package cd
 import (
 	"context"
 	"github.com/xztaityozx/go-cdx/config"
+	"github.com/xztaityozx/go-cdx/cdxsource"
 )
 
 const command string = "pushd"
 
 type Cd struct {
-	cfg config.Config
-	dst []string
+	cfg       config.Config
+	candidate []string
 }
 
 func New(cfg config.Config, path []string) Cd {
 	return Cd{
-		cfg: cfg,
-		dst: path,
+		cfg:       cfg,
+		candidate: path,
 	}
 }
 
@@ -25,6 +26,7 @@ func New(cfg config.Config, path []string) Cd {
 // return:
 //   - string: command string
 func (cd Cd) Build(ctx context.Context) string {
-	return ""
+	clc := cdxsource.NewCollection()
+	return "echo NotImplement"
 }
 
