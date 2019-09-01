@@ -3,11 +3,9 @@ package cmd
 import (
 	"fmt"
 	"runtime"
-
-	"github.com/xztaityozx/go-cdx/environment"
 )
 
-func PrintInit(env environment.Environment) {
+func PrintInit() {
 	fmt.Printf(func() string {
 		if runtime.GOOS == "windows" {
 			return `function cdx(){
@@ -32,5 +30,5 @@ eval "$(go-cdx $@)"
 [ -f %s ] || touch %s
 [ -d $HOME/.config/go-cdx ] || mkdir -p $HOME/.config/go-cdx`
 		}
-	}(), cfg.File.History, cfg.File.History, cfg.File.BookMark, cfg.File.BookMark)
+	}(), cfg.HistoryFile, cfg.HistoryFile, cfg.BookmarkFile, cfg.BookmarkFile)
 }

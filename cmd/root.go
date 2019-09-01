@@ -21,21 +21,18 @@
 package cmd
 
 import (
+	"bufio"
 	"context"
 	"fmt"
-	"os"
-	"os/signal"
-	"path/filepath"
-	"strings"
-	"syscall"
-
 	"github.com/sirupsen/logrus"
 	"github.com/xztaityozx/go-cdx/cd"
 	"github.com/xztaityozx/go-cdx/config"
-	"github.com/xztaityozx/go-cdx/customsource"
-	"github.com/xztaityozx/go-cdx/environment"
+	"os"
+	"os/signal"
+	"path/filepath"
+	"syscall"
 
-	homedir "github.com/mitchellh/go-homedir"
+	"github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -49,90 +46,78 @@ var rootCmd = &cobra.Command{
 	Short: "",
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
+		for _, v := range []struct{
+			name string
+			action func() error
+		}{
+			{name: "version", action:func() error { Version.Print(); return nil }},
+			{name: "add", action:func() error {
+				f, err := os.OpenFile(cfg.BookmarkFile, os.O_APPEND|os.O_CREATE, 0644)
+				if err != nil {
+					return err
+				}
 
-		env := environment.NewEnvironment()
+				defer f.Close()
 
-		// init
-		if init, _ := cmd.Flags().GetBool("init"); init {
-			PrintInit(env)
-			return
-		}
-		// version
-		if v, _ := cmd.Flags().GetBool("version"); v {
-			Version.Print()
-			os.Exit(1)
-		}
-		// add
-		if add, _ := cmd.Flags().GetBool("add"); add {
-			wd, _ := os.Getwd()
-			cfg.File.AppendBookmark(wd)
-			return
-		}
-		// popd
-		if popd, _ := cmd.Flags().GetBool("popd"); popd {
-			fmt.Print("popd")
-			return
-		}
-
-		// AddHistorys
-		custom, _ := cmd.Flags().GetString("custom")
-		if h, _ := cmd.Flags().GetBool("history"); h {
-			custom += "h"
-			cfg.CustomSources = append(cfg.CustomSources,
-				customsource.CustomSource{
-					Name:        "history",
-					SubName:     "h",
-					Command:     "/bin/cat " + cfg.File.History,
-					BeginColumn: 0,
-				})
-		}
-		if b, _ := cmd.Flags().GetBool("bookmark"); b {
-			custom += "b"
-			cfg.CustomSources = append(cfg.CustomSources,
-				customsource.CustomSource{
-					Name:        "bookmark",
-					SubName:     "b",
-					Command:     "/bin/cat " + cfg.File.BookMark,
-					BeginColumn: 0,
-				})
+				cwd, _ := os.Getwd()
+				_, err = f.WriteString(cwd)
+				return err
+			}},
+			{name: "popd", action: func() error {
+				command := "popd"
+				if cfg.NoOutput {
+					command += config.DevNull()
+				}
+				fmt.Print(command)
+				return nil
+			}},
+			{name: "init", action:func() error {
+				PrintInit()
+				return nil
+			}},
+		} {
+			if f, _ := cmd.Flags().GetBool(v.name); f {
+				 if err := v.action(); err != nil {
+				 	logrus.WithError(err).Fatal("[cdx] failed sub command")
+				 }
+				return
+			}
 		}
 
-		// ここからFuzzyFinderを使う
+		cs, _ := cmd.Flags().GetString("source")
+		if f, _ := cmd.Flags().GetBool("history"); f {
+			cs+="h"
+		}
+		if f, _ := cmd.Flags().GetBool("bookmark"); f {
+			cs+="b"
+		}
+
+		// list up candidate paths
+		can := append(args, )
+		if f, _:= cmd.Flags().GetBool("stdin"); f {
+			scan := bufio.NewScanner(os.Stdin)
+			for scan.Scan() {
+				can = append(can, scan.Text())
+			}
+		}
 
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
 
-		ch := make(chan os.Signal)
-		signal.Notify(ch, syscall.SIGINT, syscall.SIGSTOP)
-		defer close(ch)
+		sigCh:= make(chan os.Signal)
+		defer close(sigCh)
+		signal.Notify(sigCh, syscall.SIGINT)
 		go func() {
-			<-ch
+			<-sigCh
 			cancel()
 		}()
-		var path string
-		if len(custom) == 0 {
-			// 引数のパスを使う
-			path, _ = homedir.Expand(strings.Join(args, " "))
-		} else {
 
-			logrus.Info(cfg.CustomSources[0])
-
-			// CustomSourceを使う
-			source, err := customsource.New(custom, cfg.CustomSources)
-			if err != nil {
-				logrus.WithError(err).Error("failed search CustomSource")
-				return
-			}
-
-			path, err = cfg.FuzzyFinder.Run(ctx, source, env)
-			if err != nil {
-				logrus.Error(err)
-			}
+		for _, v := range can {
+			logrus.Info(v)
 		}
 
-		command := cd.New(cfg.Command, path, cfg.NoOutput, cfg.Make, cfg.FuzzyFinder)
-		fmt.Print(command.BuildCommand(ctx, env))
-
+		// output command string
+		fmt.Println(cd.New(cfg, can).Build(ctx))
 	},
 }
 
@@ -147,44 +132,34 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
-
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.config/go-cdx/go-cdx.yml)")
-
 	rootCmd.Flags().Bool("help", false, "help")
-
 	rootCmd.SetHelpFunc(func(cmd *cobra.Command, args []string) {
 		cmd.Usage()
 		os.Exit(1)
 	})
-
 	// CustomSource
-	rootCmd.Flags().StringP("custom", "c", "", "CustomSourceからcdします")
-
+	rootCmd.Flags().StringP("source", "c", "", "CustomSourceからcdします")
 	// NoOutput
 	rootCmd.Flags().Bool("no-output", false, "STDOUTに何も出力しません")
 	viper.BindPFlag("NoOutput", rootCmd.Flags().Lookup("no-output"))
-
 	// history
 	rootCmd.Flags().BoolP("history", "h", false, "履歴からcdします")
 	// bookmark
 	rootCmd.Flags().BoolP("bookmark", "b", false, "ブックマークからcdします")
-
 	// popd
 	rootCmd.Flags().BoolP("popd", "p", false, "popdします")
-
 	// add bookmark
 	rootCmd.Flags().Bool("add", false, "bookmarkにカレントディレクトリを追加します")
-
 	// init
 	rootCmd.Flags().Bool("init", false, "evalすることでcdxを使えるようにするコマンド列を出力します")
-
 	// version
 	rootCmd.Flags().BoolP("version", "v", false, "versionを出力して終了します")
-
 	// make
 	rootCmd.Flags().Bool("make", false, "ディレクトリが無い場合、作ってから移動します")
 	viper.BindPFlag("make", rootCmd.Flags().Lookup("make"))
-
+	// stdin
+	rootCmd.Flags().BoolP("stdin","i", false, "stdinから候補を受け取ります")
 }
 
 // initConfig reads in config file and ENV variables if set.

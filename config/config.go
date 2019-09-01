@@ -1,48 +1,41 @@
 package config
 
 import (
-	"bufio"
-	"os"
-
-	"github.com/mitchellh/go-homedir"
-	"github.com/xztaityozx/go-cdx/customsource"
-	"github.com/xztaityozx/go-cdx/fuzzyfinder"
+	"runtime"
+	"github.com/xztaityozx/go-cdx/source"
 )
 
 type (
 	Config struct {
-		File          File                    `yaml:"file"`
-		Command       string                  `yaml:"command"`
-		NoOutput      bool                    `yaml:"noOutput"`
-		Make          bool                    `yaml:"make"`
-		FuzzyFinder   fuzzyfinder.FuzzyFinder `yaml:"fuzzyfinder"`
-		CustomSources customsource.SourceCollection
-	}
-
-	File struct {
-		History  string `yaml:"history"`
-		BookMark string `yaml:"bookmark"`
+		Make bool
+		NoOutput bool
+		Source []source.Source
+		HistoryFile string
+		BookmarkFile string
+		FuzzyFinder
 	}
 )
 
-func appendTo(t, p string) error {
-	fp, err := os.OpenFile(t, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-	if err != nil {
-		return err
+var devNull = ""
+func DevNull() string {
+	if len(devNull) == 0 {
+		if runtime.GOOS=="windows" {
+			devNull=">$null"
+		} else {
+			devNull=">/dev/null"
+		}
 	}
-	defer fp.Close()
-	w := bufio.NewWriter(fp)
-
-	_, err = w.WriteString(p)
-	return err
+	return devNull
 }
 
-func (f File) AppendBookmark(p string) error {
-	b, _ := homedir.Expand(f.BookMark)
-	return appendTo(b, p)
-}
-
-func (f File) AppendHistory(p string) error {
-	h, _ := homedir.Expand(f.History)
-	return appendTo(h, p)
+var shell = ""
+func DefaultShell() string {
+	if len(shell) == 0 {
+		if runtime.GOOS == "windows" {
+			shell ="powershell.exe"
+		} else {
+			shell ="/bin/sh"
+		}
+	}
+	return shell
 }
