@@ -3,13 +3,15 @@ package config
 import (
 	"bufio"
 	"fmt"
-	"github.com/pkg/errors"
 	"strings"
 	"sync"
 
+	"github.com/pkg/errors"
+
 	"context"
-	"github.com/b4b4r07/go-finder"
 	"os/exec"
+
+	"github.com/b4b4r07/go-finder"
 )
 
 type (
@@ -17,7 +19,7 @@ type (
 		Name       string `yaml:"name"`
 		Alias      string `yaml:"alias"`
 		Command    string `yaml:"command"`
-		SkipColumn int  `yaml:"skipColumn"`
+		SkipColumn int    `yaml:"skipColumn"`
 	}
 
 	Collection []CdxSource
@@ -68,11 +70,11 @@ func (s CdxSource) run(ctx context.Context, listener chan<- finder.Item) error {
 // returns:
 //  - c: result collection
 //  - err: error
-func NewCollection(b, h string, cfg Collection, req string) (c Collection, err error) {
+func NewCollection(h, b string, cfg Collection, req string) (c Collection, err error) {
 
 	m := map[string]CdxSource{
-		"h": {Name: "history", Alias: "h", SkipColumn: 1, Command: fmt.Sprintf("cat %s", h)},
-		"b": {Name: "bookmark", Alias: "b", SkipColumn: 1, Command: fmt.Sprintf("cat %s", b)},
+		"h": {Name: "history", Alias: "h", SkipColumn: 0, Command: fmt.Sprintf("cat %s", h)},
+		"b": {Name: "bookmark", Alias: "b", SkipColumn: 0, Command: fmt.Sprintf("cat %s", b)},
 	}
 
 	for _, v := range cfg {
@@ -82,7 +84,7 @@ func NewCollection(b, h string, cfg Collection, req string) (c Collection, err e
 	c = Collection{}
 	for _, v := range req {
 		if s, ok := m[string(v)]; ok {
-			c=append(c, s)
+			c = append(c, s)
 		} else {
 			return nil, errors.Errorf("cannot find cdxsource: %s", s.Alias)
 		}
@@ -125,7 +127,7 @@ func (c Collection) generateFinderItem(ctx context.Context, fromCli []string) (i
 
 	items = finder.Items{}
 	for _, v := range fromCli {
-		items.Add(v,[]string{v})
+		items.Add(v, []string{v})
 	}
 
 	for {
@@ -160,10 +162,9 @@ func (c Collection) Select(ctx context.Context, ff FuzzyFinder, paths []string) 
 		return
 	}
 
-	res,err := f.Select(source)
+	res, err := f.Select(source)
 	if err != nil {
 		return
 	}
-
 	return strings.Join(res[0].([]string), " "), nil
 }

@@ -24,13 +24,15 @@ import (
 	"bufio"
 	"context"
 	"fmt"
-	"github.com/sirupsen/logrus"
-	"github.com/xztaityozx/go-cdx/cd"
-	"github.com/xztaityozx/go-cdx/config"
 	"os"
 	"os/signal"
 	"path/filepath"
+	"strings"
 	"syscall"
+
+	"github.com/sirupsen/logrus"
+	"github.com/xztaityozx/go-cdx/cd"
+	"github.com/xztaityozx/go-cdx/config"
 
 	"github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
@@ -46,12 +48,12 @@ var rootCmd = &cobra.Command{
 	Short: "",
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
-		for _, v := range []struct{
-			name string
+		for _, v := range []struct {
+			name   string
 			action func() error
 		}{
-			{name: "version", action:func() error { Version.Print(); return nil }},
-			{name: "add", action:func() error {
+			{name: "version", action: func() error { Version.Print(); return nil }},
+			{name: "add", action: func() error {
 				f, err := os.OpenFile(cfg.BookmarkFile, os.O_APPEND|os.O_CREATE, 0644)
 				if err != nil {
 					return err
@@ -71,26 +73,27 @@ var rootCmd = &cobra.Command{
 				fmt.Print(command)
 				return nil
 			}},
+			{name: "init", action: config.Initialize},
 		} {
 			if f, _ := cmd.Flags().GetBool(v.name); f {
-				 if err := v.action(); err != nil {
-				 	logrus.WithError(err).Fatal("[cdx] failed sub command")
-				 }
+				if err := v.action(); err != nil {
+					logrus.WithError(err).Fatal("[cdx] failed sub command")
+				}
 				return
 			}
 		}
 
 		cs, _ := cmd.Flags().GetString("cdxsource")
 		if f, _ := cmd.Flags().GetBool("history"); f {
-			cs+="h"
+			cs += "h"
 		}
 		if f, _ := cmd.Flags().GetBool("bookmark"); f {
-			cs+="b"
+			cs += "b"
 		}
 
 		// list up candidate paths
-		can := append(args, )
-		if f, _:= cmd.Flags().GetBool("stdin"); f {
+		can := append(args)
+		if f, _ := cmd.Flags().GetBool("stdin"); f {
 			scan := bufio.NewScanner(os.Stdin)
 			for scan.Scan() {
 				can = append(can, scan.Text())
@@ -100,7 +103,7 @@ var rootCmd = &cobra.Command{
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
 
-		sigCh:= make(chan os.Signal)
+		sigCh := make(chan os.Signal)
 		defer close(sigCh)
 		signal.Notify(sigCh, syscall.SIGINT)
 		go func() {
@@ -155,7 +158,9 @@ func init() {
 	rootCmd.Flags().Bool("make", false, "ディレクトリが無い場合、作ってから移動します")
 	viper.BindPFlag("make", rootCmd.Flags().Lookup("make"))
 	// stdin
-	rootCmd.Flags().BoolP("stdin","i", false, "stdinから候補を受け取ります")
+	rootCmd.Flags().BoolP("stdin", "i", false, "stdinから候補を受け取ります")
+	// init
+	rootCmd.Flags().Bool("init", false, "init用のScriptを出力します")
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -185,5 +190,10 @@ func initConfig() {
 
 	if err := viper.Unmarshal(&cfg); err != nil {
 		logrus.WithError(err).Fatal("[cdx] failed unmarshal config file")
+	}
+	{
+		home, _ := homedir.Dir()
+		cfg.HistoryFile = strings.Replace(cfg.HistoryFile, "~", home, 1)
+		cfg.BookmarkFile = strings.Replace(cfg.BookmarkFile, "~", home, 1)
 	}
 }

@@ -2,11 +2,13 @@ package cd
 
 import (
 	"context"
+	"os"
+	"path/filepath"
+
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 	"github.com/xztaityozx/go-cdx/config"
-	"os"
-	"path/filepath"
+	"github.com/xztaityozx/go-cdx/fileutil"
 )
 
 const command string = "pushd"
@@ -37,12 +39,15 @@ func (cd Cd) Build(ctx context.Context, req string) (string, error) {
 	}
 
 	var path = ""
-	if len(cd.candidate) >= 2 || len(req) != 0{
+	if len(cd.candidate) >= 2 || len(req) != 0 {
+
 		clc, err := config.NewCollection(cd.cfg.HistoryFile, cd.cfg.BookmarkFile, cd.cfg.Source, req)
+
 		if err != nil {
 			return "", err
 		}
 		path, err = clc.Select(ctx, cd.cfg.FuzzyFinder, cd.candidate)
+
 		if err != nil {
 			return "", err
 		}
@@ -66,6 +71,11 @@ func (cd Cd) Build(ctx context.Context, req string) (string, error) {
 		}
 	}
 
+	// append to history file
+	if err := fileutil.AppendLine(cd.cfg.HistoryFile, path); err != nil {
+		return "", errors.Errorf("history file not found: %s", cd.cfg.HistoryFile)
+	}
+
 	return func() string {
 		if cd.cfg.NoOutput {
 			return command + " \"" + path + "\" " + config.DevNull()
@@ -74,4 +84,3 @@ func (cd Cd) Build(ctx context.Context, req string) (string, error) {
 		}
 	}(), nil
 }
-

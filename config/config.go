@@ -6,12 +6,12 @@ import (
 
 type (
 	Config struct {
-		Make         bool			`yaml:"make"`
-		NoOutput     bool			`yaml:"noOutput"`
-		Source       []CdxSource	`yaml:"source"`
-		HistoryFile  string			`yaml:"history"`
-		BookmarkFile string			`yaml:"bookmark"`
-		FuzzyFinder  FuzzyFinder	`yaml:"fuzzyfinder"`
+		Make         bool        `yaml:"make"`
+		NoOutput     bool        `yaml:"noOutput"`
+		Source       []CdxSource `yaml:"source"`
+		HistoryFile  string      `yaml:"history"`
+		BookmarkFile string      `yaml:"bookmark"`
+		FuzzyFinder  FuzzyFinder `yaml:"fuzzyfinder"`
 	}
 )
 
@@ -44,7 +44,7 @@ func DefaultShell() string {
 var exitCommand = ""
 
 func ExitCommand() string {
-	if len(exitCommand)	== 0 {
+	if len(exitCommand) == 0 {
 		if runtime.GOOS == "windows" {
 			exitCommand = "throw '[cdx] failed'"
 		} else {
