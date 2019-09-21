@@ -1,5 +1,6 @@
 
-function cdx() {
+function cdx(
+) {
     begin{
         [System.Collections.Generic.List[string]]$paths=@{}
     }
@@ -7,7 +8,7 @@ function cdx() {
         $paths.Add($_)
     }
     end{
-        $command=$paths | go-cdx $args
+        $command = "$($paths | go-cdx $args)";
         Invoke-Expression "$command"
     }
 }

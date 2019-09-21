@@ -2,7 +2,6 @@ package fileutil
 
 import (
 	"os"
-	"runtime"
 )
 
 func Append(path, text string) error {
@@ -18,14 +17,5 @@ func Append(path, text string) error {
 }
 
 func AppendLine(path, text string) error {
-	newline := func() string {
-		if runtime.GOOS == "windows" {
-			return "\r\n"
-		} else if runtime.GOOS == "darwin" {
-			return "\r"
-		} else {
-			return "\n"
-		}
-	}()
-	return Append(path, text+newline)
+	return Append(path, text+"\n")
 }
