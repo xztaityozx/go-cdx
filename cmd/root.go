@@ -92,7 +92,11 @@ var rootCmd = &cobra.Command{
 		}
 
 		// list up candidate paths
-		can := append(args)
+		home, _ := homedir.Dir()
+		var can []string
+		for _, v := range args {
+			can = append(can, strings.Replace(v, "~", home, 1))
+		}
 		if f, _ := cmd.Flags().GetBool("stdin"); f {
 			scan := bufio.NewScanner(os.Stdin)
 			for scan.Scan() {

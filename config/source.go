@@ -166,5 +166,8 @@ func (c Collection) Select(ctx context.Context, ff FuzzyFinder, paths []string) 
 	if err != nil {
 		return
 	}
+	if len(res) == 0 {
+		return "", errors.New("failed select path")
+	}
 	return strings.Join(res[0].([]string), " "), nil
 }
