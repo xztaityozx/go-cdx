@@ -5,32 +5,28 @@ import (
 	"os"
 )
 
-var version Version = Version{
-	Major:  1,
-	Minor:  1,
-	Build:  21,
-	Status: "Stable",
-	Date:   "2018/08/27",
-}
+const (
+	dev    = "Development"
+	beta   = "Beta"
+	stable = "Stable"
+)
 
-type Version struct {
+type CdxVersion struct {
 	Major  int
 	Minor  int
 	Build  int
 	Status string
-	Date   string
+	Day    string
 }
 
-func (v Version) ToString() string {
-	return fmt.Sprintf(`cdx version %d.%d.%d %s (%s)
-	
-Author:     xztaityozx
-Repository: https://github.com/xztaityozx/go-cdx
-License:    MIT`, v.Major, v.Minor, v.Build, v.Status, v.Date)
+var Version = CdxVersion{
+	Major:  2,
+	Minor:  1,
+	Build:  5,
+	Status: stable,
+	Day:    "2019/09/16",
 }
 
-func PrintVersion() {
-	os.Stderr.WriteString(version.ToString())
-	os.Stderr.Close()
-	os.Exit(0)
+func (v CdxVersion) Print() {
+	fmt.Fprintf(os.Stderr, "cdx v%d.%d.%d %s(%s)\n", v.Major, v.Minor, v.Build, v.Status, v.Day)
 }
