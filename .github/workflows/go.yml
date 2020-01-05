@@ -1,0 +1,48 @@
+name: Go
+on: 
+  push:
+    branches: 
+      - release
+    tags:
+      - v*.*.*
+jobs:
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        goos: [linux, windows]
+        arch: [amd64, 386]
+    steps:
+
+    - name: Set up Go 1.13
+      uses: actions/setup-go@v1
+      with:
+        go-version: 1.13
+      id: go
+
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@v1
+      
+    - name: make dir
+      run: mkdir build 
+      
+    - name: Build ${{ matrix.goos }}/${{ matrix.arch }}
+      env:
+        GOOS: ${{ matrix.goos }}
+        GOARCH: ${{ matrix.arch }}
+        TARGET: ./build/go-cdx-${{ matrix.goos }}-${{ matrix.arch}}-${{ github.ref }}
+      run: |
+        go build -v -o $TARGET
+        zip $TARGET 
+        rm $TARGET
+        
+    - name: Release
+      uses: softprops/action-gh-release@v0.1.0
+      with:
+        files: ./build/*
+      env: 
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
+    
