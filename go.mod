@@ -10,5 +10,6 @@ require (
 	github.com/spf13/cobra v0.0.5
 	github.com/spf13/viper v1.6.1
 	github.com/stretchr/testify v1.2.2
+	golang.org/x/tools v0.0.0-20200331202046-9d5940d49312 // indirect
 	golang.org/x/xerrors v0.0.0-20191204190536-9bdfabe68543
 )
