@@ -22,9 +22,11 @@ package cmd
 
 import (
 	"bufio"
+	"bytes"
 	"context"
 	"fmt"
 	"os"
+	"os/exec"
 	"os/signal"
 	"path/filepath"
 	"strings"
@@ -33,6 +35,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/xztaityozx/go-cdx/cd"
 	"github.com/xztaityozx/go-cdx/config"
+	"golang.org/x/xerrors"
 
 	"github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
@@ -74,6 +77,21 @@ var rootCmd = &cobra.Command{
 				return nil
 			}},
 			{name: "init", action: config.Initialize},
+			{name: "git-root", action: func() error {
+				cmd := exec.Command("git", "rev-parse", "--show-cdup")
+
+				o, err := cmd.CombinedOutput()
+				o = bytes.Trim(o, "\n")
+				if err != nil {
+					return xerrors.New(string(o))
+				}
+
+				if len(o) != 0 {
+					fmt.Printf("pushd %s", string(o))
+				}
+
+				return nil
+			}},
 		} {
 			if f, _ := cmd.Flags().GetBool(v.name); f {
 				if err := v.action(); err != nil {
@@ -165,6 +183,8 @@ func init() {
 	rootCmd.Flags().BoolP("stdin", "i", false, "stdinから候補を受け取ります")
 	// init
 	rootCmd.Flags().Bool("init", false, "init用のScriptを出力します")
+	// git-root
+	rootCmd.Flags().BoolP("git-root", "R", false, "gitのルートディレクトリまで移動します")
 }
 
 // initConfig reads in config file and ENV variables if set.
