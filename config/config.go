@@ -1,7 +1,12 @@
 package config
 
 import (
+	"path/filepath"
 	"runtime"
+	"strings"
+
+	"github.com/mitchellh/go-homedir"
+	"github.com/spf13/viper"
 )
 
 type (
@@ -52,4 +57,37 @@ func ExitCommand() string {
 		}
 	}
 	return exitCommand
+}
+
+func Load(path string) (Config, error) {
+	home, err := homedir.Dir()
+	if err != nil {
+		return Config{}, err
+	}
+	if len(path) != 0 {
+		viper.SetConfigFile(path)
+	} else {
+
+		// linux/macOSは$HOME/.config/go-cdx/以下を見る
+		viper.AddConfigPath(filepath.Join(home, ".config", "go-cdx"))
+		// Windowsなら追加で $HOME\AppData\Roaming\go-cdxも見る
+		if runtime.GOOS == "windows" {
+			viper.AddConfigPath(filepath.Join(home, "AppData", "Roaming", "go-cdx"))
+		}
+		// ファイル名は go-cdx.{json,toml,yaml}など。viperが解釈できればなんでも
+		viper.SetConfigName("go-cdx")
+	}
+
+	err = viper.ReadInConfig()
+	if err != nil {
+		return Config{}, err
+	}
+
+	var cfg Config
+	err = viper.Unmarshal(&cfg)
+
+	cfg.HistoryFile = strings.Replace(cfg.HistoryFile, "~", home, 1)
+	cfg.BookmarkFile = strings.Replace(cfg.BookmarkFile, "~", home, 1)
+
+	return cfg, err
 }
