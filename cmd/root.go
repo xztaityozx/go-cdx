@@ -22,11 +22,9 @@ package cmd
 
 import (
 	"bufio"
-	"bytes"
 	"context"
 	"fmt"
 	"os"
-	"os/exec"
 	"os/signal"
 	"path/filepath"
 	"strings"
@@ -35,7 +33,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/xztaityozx/go-cdx/cd"
 	"github.com/xztaityozx/go-cdx/config"
-	"golang.org/x/xerrors"
+	"github.com/xztaityozx/go-cdx/subcmd"
 
 	"github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
@@ -45,57 +43,29 @@ import (
 var cfgFile string
 var cfg config.Config
 
-// rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "go-cdx",
-	Short: "",
-	Long:  ``,
+	Use:     "go-cdx",
+	Short:   "",
+	Long:    ``,
+	Version: "2.2.0",
+	PreRun:  subcmd.GenCompletion,
 	Run: func(cmd *cobra.Command, args []string) {
 		for _, v := range []struct {
 			name   string
-			action func() error
+			action func() (string, error)
 		}{
-			{name: "version", action: func() error { Version.Print(); return nil }},
-			{name: "add", action: func() error {
-				f, err := os.OpenFile(cfg.BookmarkFile, os.O_APPEND|os.O_CREATE, 0644)
-				if err != nil {
-					return err
-				}
-
-				defer f.Close()
-
-				cwd, _ := os.Getwd()
-				_, err = f.WriteString(cwd)
-				return err
+			{name: "add", action: func() (string, error) {
+				return subcmd.Add(cfg.BookmarkFile)
 			}},
-			{name: "popd", action: func() error {
-				command := "popd"
-				if cfg.NoOutput {
-					command += config.DevNull()
-				}
-				fmt.Print(command)
-				return nil
-			}},
-			{name: "init", action: config.Initialize},
-			{name: "git-root", action: func() error {
-				cmd := exec.Command("git", "rev-parse", "--show-cdup")
-
-				o, err := cmd.CombinedOutput()
-				o = bytes.Trim(o, "\n")
-				if err != nil {
-					return xerrors.New(string(o))
-				}
-
-				if len(o) != 0 {
-					fmt.Printf("pushd %s", string(o))
-				}
-
-				return nil
-			}},
+			{name: "popd", action: subcmd.Popd},
+			{name: "init", action: subcmd.Initialize},
+			{name: "git-root", action: subcmd.GitRoot},
 		} {
 			if f, _ := cmd.Flags().GetBool(v.name); f {
-				if err := v.action(); err != nil {
+				if command, err := v.action(); err != nil {
 					logrus.WithError(err).Fatal("[cdx] failed sub command")
+				} else {
+					fmt.Println(command)
 				}
 				return
 			}
@@ -174,8 +144,6 @@ func init() {
 	rootCmd.Flags().BoolP("popd", "p", false, "popdします")
 	// add bookmark
 	rootCmd.Flags().Bool("add", false, "bookmarkにカレントディレクトリを追加します")
-	// version
-	rootCmd.Flags().BoolP("version", "v", false, "versionを出力して終了します")
 	// make
 	rootCmd.Flags().Bool("make", false, "ディレクトリが無い場合、作ってから移動します")
 	viper.BindPFlag("make", rootCmd.Flags().Lookup("make"))
@@ -185,6 +153,8 @@ func init() {
 	rootCmd.Flags().Bool("init", false, "init用のScriptを出力します")
 	// git-root
 	rootCmd.Flags().BoolP("git-root", "R", false, "gitのルートディレクトリまで移動します")
+	// generate completion script
+	rootCmd.Flags().String("completion", "", "generate completion script for bash, zsh, fish, PowerShell")
 }
 
 // initConfig reads in config file and ENV variables if set.
