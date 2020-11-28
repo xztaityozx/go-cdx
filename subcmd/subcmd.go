@@ -46,13 +46,13 @@ func GenCompletion(cmd *cobra.Command, args []string) {
 	}
 
 	if shell == "bash" {
-		cmd.GenBashCompletion(os.Stdout)
+		_ = cmd.GenBashCompletion(os.Stdout)
 	} else if shell == "zsh" {
-		cmd.GenZshCompletion(os.Stdout)
+		_ = cmd.GenZshCompletion(os.Stdout)
 	} else if shell == "fish" {
-		cmd.GenFishCompletion(os.Stdout, false)
+		_ = cmd.GenFishCompletion(os.Stdout, false)
 	} else if shell == "PowerShell" {
-		cmd.GenPowerShellCompletion(os.Stdout)
+		_ = cmd.GenPowerShellCompletion(os.Stdout)
 	} else {
 		logrus.Fatal(shell, " is unsupported shell name")
 	}

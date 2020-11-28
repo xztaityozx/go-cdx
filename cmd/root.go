@@ -128,14 +128,14 @@ func init() {
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.config/go-cdx/go-cdx.yml)")
 	rootCmd.Flags().Bool("help", false, "help")
 	rootCmd.SetHelpFunc(func(cmd *cobra.Command, args []string) {
-		cmd.Usage()
+		_ = cmd.Usage()
 		os.Exit(1)
 	})
 	// CustomSource
 	rootCmd.Flags().StringP("cdxsource", "c", "", "CustomSourceからcdします")
 	// NoOutput
 	rootCmd.Flags().Bool("no-output", false, "STDOUTに何も出力しません")
-	viper.BindPFlag("NoOutput", rootCmd.Flags().Lookup("no-output"))
+	_ = viper.BindPFlag("NoOutput", rootCmd.Flags().Lookup("no-output"))
 	// history
 	rootCmd.Flags().BoolP("history", "h", false, "履歴からcdします")
 	// bookmark
@@ -146,7 +146,7 @@ func init() {
 	rootCmd.Flags().Bool("add", false, "bookmarkにカレントディレクトリを追加します")
 	// make
 	rootCmd.Flags().Bool("make", false, "ディレクトリが無い場合、作ってから移動します")
-	viper.BindPFlag("make", rootCmd.Flags().Lookup("make"))
+	_ = viper.BindPFlag("make", rootCmd.Flags().Lookup("make"))
 	// stdin
 	rootCmd.Flags().BoolP("stdin", "i", false, "stdinから候補を受け取ります")
 	// init
