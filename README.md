@@ -1,10 +1,14 @@
 # cdx
-wrapper for cd(pushd) command
+![Go](https://github.com/xztaityozx/go-cdx/workflows/Go/badge.svg?branch=master)
+
+_cdx_ wrapper for cd(pushd) command
 
 ## Install
 ```sh
 $ go get -u github.com/xztaityozx/go-cdx
 ```
+
+or Download from GitHub releases page
 
 ## Usage
 
