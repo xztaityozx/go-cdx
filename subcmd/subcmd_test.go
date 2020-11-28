@@ -31,7 +31,8 @@ func Test_Initialize(t *testing.T) {
 			t.Skip()
 		}
 
-		as.Equal(`function cdx() {
+		as.Equal(`
+function cdx() {
     begin{
         [System.Collections.Generic.List[string]]$paths=@{}
     }
