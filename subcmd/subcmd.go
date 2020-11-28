@@ -34,7 +34,7 @@ function cdx() {
     }
 }`), nil
 	} else {
-		return fmt.Sprint(`function() cdx() {command="$(go-cdx $@)"; eval "${command}"}`), nil
+		return `function() cdx() {command="$(go-cdx $@)"; eval "${command}"}`, nil
 	}
 }
 
@@ -87,7 +87,7 @@ func GitRoot() (string, error) {
 	}
 
 	if len(o) == 0 {
-		return fmt.Sprint("true"), nil
+		return "true", nil
 	} else {
 		return fmt.Sprintf("pushd %s", string(o)), nil
 	}
