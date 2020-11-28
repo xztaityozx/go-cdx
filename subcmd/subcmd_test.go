@@ -77,7 +77,7 @@ func Test_Add(t *testing.T) {
 		as.Nil(err)
 		as.Equal("true", o)
 
-		data, err := ioutil.ReadFile(bkmkFile)
+		data, _ := ioutil.ReadFile(bkmkFile)
 		as.Equal([]byte(fmt.Sprintln(cwd)), data)
 	})
 
@@ -87,7 +87,7 @@ func Test_Add(t *testing.T) {
 		as.Nil(err)
 		as.Equal("true", o)
 
-		data, err := ioutil.ReadFile(bkmkFile)
+		data, _ := ioutil.ReadFile(bkmkFile)
 		as.Equal([]byte(fmt.Sprintf("%s\n%s\n", cwd, cwd)), data)
 	})
 
