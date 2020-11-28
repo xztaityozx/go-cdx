@@ -101,6 +101,7 @@ jobs:
         shell: bash
         working-directory: ${{ steps.vars.outputs.os }}
         run: |
+          mkdir -p $HOME/.config/go-cdx
           touch $HOME/.config/go-cdx/go-cdx.yaml
           [[ "${{ matrix.os }}" != "windows-latest" ]] && {
             ./go-cdx --completion zsh - > ./cdx-completion.zsh
