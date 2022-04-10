@@ -34,7 +34,7 @@ function cdx() {
     }
 }`), nil
 	} else {
-		return `function() cdx() {command="$(go-cdx $@)"; eval "${command}"}`, nil
+		return `function cdx() {command="$(go-cdx $@)"; eval "${command}"}`, nil
 	}
 }
 
