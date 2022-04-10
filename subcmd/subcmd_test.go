@@ -52,7 +52,7 @@ function cdx() {
 			t.Skip()
 		}
 
-		as.Equal(`function() cdx() {command="$(go-cdx $@)"; eval "${command}"}`, o)
+		as.Equal(`function cdx() {command="$(go-cdx $@)"; eval "${command}"}`, o)
 	})
 }
 

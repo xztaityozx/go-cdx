@@ -46,7 +46,7 @@ var rootCmd = &cobra.Command{
 	Use:     "go-cdx",
 	Short:   "",
 	Long:    ``,
-	Version: "2.2.0",
+	Version: "2.2.1",
 	PreRun:  subcmd.GenCompletion,
 	Run: func(cmd *cobra.Command, args []string) {
 		for _, v := range []struct {
@@ -94,7 +94,7 @@ var rootCmd = &cobra.Command{
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
 
-		sigCh := make(chan os.Signal)
+		sigCh := make(chan os.Signal, 1)
 		defer close(sigCh)
 		signal.Notify(sigCh, syscall.SIGINT)
 		go func() {
