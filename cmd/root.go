@@ -46,7 +46,7 @@ var rootCmd = &cobra.Command{
 	Use:     "go-cdx",
 	Short:   "",
 	Long:    ``,
-	Version: "2.2.0",
+	Version: "2.2.1",
 	PreRun:  subcmd.GenCompletion,
 	Run: func(cmd *cobra.Command, args []string) {
 		for _, v := range []struct {
